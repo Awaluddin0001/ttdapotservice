@@ -1,0 +1,48 @@
+{
+  "name": "dapotservice",
+  "version": "1.0.0",
+  "description": "services untuk data potensi",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production ts-node src/index.ts",
+    "startlocal": "cross-env NODE_ENV=production ts-node src/index.ts --host 192.168.1.62",
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "test": "vitest"
+  },
+  "keywords": [
+    "monitoring",
+    "ttc",
+    "pengayoman"
+  ],
+  "author": "Awaluddin",
+  "license": "ISC",
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "moment-timezone": "^0.5.45",
+    "mongoose": "^8.5.0",
+    "mysql2": "^3.10.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.7",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.56.0",
+    "globals": "^15.6.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^7.13.1",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,14 @@
+// src/config/database.ts
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+});
+
+export default pool;
