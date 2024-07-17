@@ -9,13 +9,13 @@ import {
   updateEntity,
 } from '../utils/CreatePutDataElectrical';
 
-export const allRectifier = async (req: Request, res: Response) => {
+export const allGenset = async (req: Request, res: Response) => {
   await getAllRow(
     req,
     res,
     connectMySQL,
     `SELECT 
-          r.*, 
+          g.*, 
           b.name AS brand_name, 
           v.company AS vendor_name, 
           u.name AS user_name,
@@ -25,23 +25,23 @@ export const allRectifier = async (req: Request, res: Response) => {
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
           DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
           DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM rectifier r
-    LEFT JOIN rectifier_brand b ON r.brand_id = b.id
-    LEFT JOIN electrical_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
-    LEFT JOIN electrical el ON r.id = el.device_id
+    FROM genset g
+    LEFT JOIN genset_brand b ON g.brand_id = b.id
+    LEFT JOIN electrical_vendor v ON g.vendor_id = v.id
+    LEFT JOIN user u ON g.user_id = u.id
+    LEFT JOIN maintenance_electrical m ON g.maintenance_id = m.id
+    LEFT JOIN electrical el ON g.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
   );
 };
 
-export const Rectifier = async (req: Request, res: Response) => {
+export const Genset = async (req: Request, res: Response) => {
   await getOneRow(
     req,
     res,
     connectMySQL,
     `SELECT 
-          r.*, 
+          g.*, 
           b.name AS brand_name, 
           v.company AS vendor_name, 
           u.name AS user_name,
@@ -51,18 +51,18 @@ export const Rectifier = async (req: Request, res: Response) => {
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
           DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
           DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM rectifier r
-    LEFT JOIN rectifier_brand b ON r.brand_id = b.id
-    LEFT JOIN electrical_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
-    LEFT JOIN electrical el ON r.id = el.device_id
+    FROM genset g
+    LEFT JOIN genset_brand b ON g.brand_id = b.id
+    LEFT JOIN electrical_vendor v ON g.vendor_id = v.id
+    LEFT JOIN user u ON g.user_id = u.id
+    LEFT JOIN maintenance_electrical m ON g.maintenance_id = m.id
+    LEFT JOIN electrical el ON g.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id
-    WHERE r.id = ?`,
+    WHERE g.id = ?`,
   );
 };
 
-export const createRectifier = async (req: Request, res: Response) => {
+export const createGenset = async (req: Request, res: Response) => {
   const deviceColumns = [
     'brand_id',
     'vendor_id',
@@ -70,16 +70,13 @@ export const createRectifier = async (req: Request, res: Response) => {
     'maintenance_id',
     'installation_date',
     'name',
-    'role',
-    'type',
-    'capacity',
-    'modul',
-    'capacity_modul',
-    'load_current',
-    'occupancy',
-    'remark_aging',
-    'warranty',
-    `\`system\``,
+    'model',
+    'manufactur',
+    'serial_number',
+    'load',
+    'fuel',
+    'fuel_capacity',
+    'runtime',
   ];
   const electricalColumns = [
     'ne_id',
@@ -95,14 +92,14 @@ export const createRectifier = async (req: Request, res: Response) => {
   await createRow(
     req,
     res,
-    'rectifier',
-    'ELREC',
+    'genset',
+    'ELGEN',
     deviceColumns,
     electricalColumns,
   );
 };
 
-export const updateRectifier = async (req: Request, res: Response) => {
+export const updateGenset = async (req: Request, res: Response) => {
   const deviceColumns = [
     'brand_id',
     'vendor_id',
@@ -110,16 +107,13 @@ export const updateRectifier = async (req: Request, res: Response) => {
     'maintenance_id',
     'installation_date',
     'name',
-    'role',
-    'type',
-    'capacity',
-    'modul',
-    'capacity_modul',
-    'load_current',
-    'occupancy',
-    'remark_aging',
-    'warranty',
-    `\`system\``,
+    'model',
+    'manufactur',
+    'serial_number',
+    'load',
+    'fuel',
+    'fuel_capacity',
+    'runtime',
   ];
   const electricalColumns = [
     'ne_id',
@@ -131,49 +125,49 @@ export const updateRectifier = async (req: Request, res: Response) => {
     `\`condition\``,
     'notes',
   ];
-  await updateRow(req, res, 'rectifier', deviceColumns, electricalColumns);
+  await updateRow(req, res, 'genset', deviceColumns, electricalColumns);
 };
 
-export const deleteRectifier = async (req: Request, res: Response) => {
+export const deleteGenset = async (req: Request, res: Response) => {
   await deleteCombinedRow(
     req,
     res,
     connectMySQL,
     `DELETE FROM electrical WHERE device_id = ?`,
-    `DELETE FROM rectifier WHERE id = ?`,
+    `DELETE FROM genset WHERE id = ?`,
     `DELETE FROM electrical_photo WHERE asset_id = ?`,
     `electrical`,
   );
 };
 
-export const allBrandRecti = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM rectifier_brand`);
+export const allBrandGenset = async (req: Request, res: Response) => {
+  await getAllRow(req, res, connectMySQL, `SELECT * FROM genset_brand`);
 };
 
-export const brandRectifier = async (req: Request, res: Response) => {
+export const brandGenset = async (req: Request, res: Response) => {
   await getOneRow(
     req,
     res,
     connectMySQL,
-    `SELECT * FROM rectifier_brand WHERE id = ?`,
+    `SELECT * FROM genset_brand WHERE id = ?`,
   );
 };
 
-export const createBrandRectifier = async (req: Request, res: Response) => {
+export const createBrandGenset = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await createEntity(req, res, 'rectifier_brand', 'ELRBR', columns);
+  await createEntity(req, res, 'genset_brand', 'ELGBR', columns);
 };
 
-export const updateBrandRectifier = async (req: Request, res: Response) => {
+export const updateBrandGenset = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await updateEntity(req, res, 'rectifier_brand', columns);
+  await updateEntity(req, res, 'genset_brand', columns);
 };
 
-export const deleteBrandRectifier = async (req: Request, res: Response) => {
+export const deleteBrandGenset = async (req: Request, res: Response) => {
   await deleteRow(
     req,
     res,
     connectMySQL,
-    `DELETE FROM rectifier_brand WHERE id = ?`,
+    `DELETE FROM genset_brand WHERE id = ?`,
   );
 };

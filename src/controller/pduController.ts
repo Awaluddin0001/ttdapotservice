@@ -9,13 +9,13 @@ import {
   updateEntity,
 } from '../utils/CreatePutDataElectrical';
 
-export const allRectifier = async (req: Request, res: Response) => {
+export const allPdu = async (req: Request, res: Response) => {
   await getAllRow(
     req,
     res,
     connectMySQL,
     `SELECT 
-          r.*, 
+          p.*, 
           b.name AS brand_name, 
           v.company AS vendor_name, 
           u.name AS user_name,
@@ -25,23 +25,23 @@ export const allRectifier = async (req: Request, res: Response) => {
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
           DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
           DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM rectifier r
-    LEFT JOIN rectifier_brand b ON r.brand_id = b.id
-    LEFT JOIN electrical_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
-    LEFT JOIN electrical el ON r.id = el.device_id
+    FROM pdu p
+    LEFT JOIN pdu_brand b ON p.brand_id = b.id
+    LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
+    LEFT JOIN user u ON p.user_id = u.id
+    LEFT JOIN maintenance_electrical m ON p.maintenance_id = m.id
+    LEFT JOIN electrical el ON p.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
   );
 };
 
-export const Rectifier = async (req: Request, res: Response) => {
+export const Pdu = async (req: Request, res: Response) => {
   await getOneRow(
     req,
     res,
     connectMySQL,
     `SELECT 
-          r.*, 
+          p.*, 
           b.name AS brand_name, 
           v.company AS vendor_name, 
           u.name AS user_name,
@@ -51,18 +51,18 @@ export const Rectifier = async (req: Request, res: Response) => {
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
           DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
           DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM rectifier r
-    LEFT JOIN rectifier_brand b ON r.brand_id = b.id
-    LEFT JOIN electrical_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
-    LEFT JOIN electrical el ON r.id = el.device_id
+    FROM pdu p
+    LEFT JOIN pdu_brand b ON p.brand_id = b.id
+    LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
+    LEFT JOIN user u ON p.user_id = u.id
+    LEFT JOIN maintenance_electrical m ON p.maintenance_id = m.id
+    LEFT JOIN electrical el ON p.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id
-    WHERE r.id = ?`,
+    WHERE g.id = ?`,
   );
 };
 
-export const createRectifier = async (req: Request, res: Response) => {
+export const createPdu = async (req: Request, res: Response) => {
   const deviceColumns = [
     'brand_id',
     'vendor_id',
@@ -70,16 +70,11 @@ export const createRectifier = async (req: Request, res: Response) => {
     'maintenance_id',
     'installation_date',
     'name',
-    'role',
-    'type',
-    'capacity',
-    'modul',
-    'capacity_modul',
-    'load_current',
-    'occupancy',
-    'remark_aging',
-    'warranty',
-    `\`system\``,
+    'model',
+    'manufactur',
+    'serial_number',
+    'load',
+    'breaker_count',
   ];
   const electricalColumns = [
     'ne_id',
@@ -92,17 +87,10 @@ export const createRectifier = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await createRow(
-    req,
-    res,
-    'rectifier',
-    'ELREC',
-    deviceColumns,
-    electricalColumns,
-  );
+  await createRow(req, res, 'pdu', 'ELPDU', deviceColumns, electricalColumns);
 };
 
-export const updateRectifier = async (req: Request, res: Response) => {
+export const updatePdu = async (req: Request, res: Response) => {
   const deviceColumns = [
     'brand_id',
     'vendor_id',
@@ -110,16 +98,11 @@ export const updateRectifier = async (req: Request, res: Response) => {
     'maintenance_id',
     'installation_date',
     'name',
-    'role',
-    'type',
-    'capacity',
-    'modul',
-    'capacity_modul',
-    'load_current',
-    'occupancy',
-    'remark_aging',
-    'warranty',
-    `\`system\``,
+    'model',
+    'manufactur',
+    'serial_number',
+    'load',
+    'breaker_count',
   ];
   const electricalColumns = [
     'ne_id',
@@ -131,49 +114,44 @@ export const updateRectifier = async (req: Request, res: Response) => {
     `\`condition\``,
     'notes',
   ];
-  await updateRow(req, res, 'rectifier', deviceColumns, electricalColumns);
+  await updateRow(req, res, 'pdu', deviceColumns, electricalColumns);
 };
 
-export const deleteRectifier = async (req: Request, res: Response) => {
+export const deletePdu = async (req: Request, res: Response) => {
   await deleteCombinedRow(
     req,
     res,
     connectMySQL,
     `DELETE FROM electrical WHERE device_id = ?`,
-    `DELETE FROM rectifier WHERE id = ?`,
+    `DELETE FROM pdu WHERE id = ?`,
     `DELETE FROM electrical_photo WHERE asset_id = ?`,
     `electrical`,
   );
 };
 
-export const allBrandRecti = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM rectifier_brand`);
+export const allBrandPdu = async (req: Request, res: Response) => {
+  await getAllRow(req, res, connectMySQL, `SELECT * FROM pdu_brand`);
 };
 
-export const brandRectifier = async (req: Request, res: Response) => {
+export const brandPdu = async (req: Request, res: Response) => {
   await getOneRow(
     req,
     res,
     connectMySQL,
-    `SELECT * FROM rectifier_brand WHERE id = ?`,
+    `SELECT * FROM pdu_brand WHERE id = ?`,
   );
 };
 
-export const createBrandRectifier = async (req: Request, res: Response) => {
+export const createBrandPdu = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await createEntity(req, res, 'rectifier_brand', 'ELRBR', columns);
+  await createEntity(req, res, 'pdu_brand', 'ELPBR', columns);
 };
 
-export const updateBrandRectifier = async (req: Request, res: Response) => {
+export const updateBrandPdu = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await updateEntity(req, res, 'rectifier_brand', columns);
+  await updateEntity(req, res, 'pdu_brand', columns);
 };
 
-export const deleteBrandRectifier = async (req: Request, res: Response) => {
-  await deleteRow(
-    req,
-    res,
-    connectMySQL,
-    `DELETE FROM rectifier_brand WHERE id = ?`,
-  );
+export const deleteBrandPdu = async (req: Request, res: Response) => {
+  await deleteRow(req, res, connectMySQL, `DELETE FROM pdu_brand WHERE id = ?`);
 };

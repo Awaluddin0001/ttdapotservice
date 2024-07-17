@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { upload } from '../utils/imageUpload';
 import {
   allRectifier,
   Rectifier,
@@ -78,6 +79,46 @@ import {
   updateTrafo,
 } from '../controller/trafoController';
 
+import {
+  allGenset,
+  Genset,
+  allBrandGenset,
+  brandGenset,
+  createBrandGenset,
+  createGenset,
+  deleteBrandGenset,
+  deleteGenset,
+  updateBrandGenset,
+  updateGenset,
+} from '../controller/gensetController';
+
+import {
+  allPdu,
+  Pdu,
+  allBrandPdu,
+  brandPdu,
+  createBrandPdu,
+  createPdu,
+  deleteBrandPdu,
+  deletePdu,
+  updateBrandPdu,
+  updatePdu,
+} from '../controller/pduController';
+
+import {
+  allCubicle,
+  Cubicle,
+  createCubicle,
+  deleteCubicle,
+  updateCubicle,
+} from '../controller/cubicleController';
+
+import {
+  getElectricalImagesByAssetId,
+  updateElectricalImages,
+  uploadElectricalImage,
+} from '../controller/electricalImageUploadController';
+
 const electrical = Router();
 
 // vendor rectifier
@@ -104,8 +145,8 @@ electrical.delete('/link', deleteLinkElectrical);
 // Rectifier
 electrical.get('/rectifiers', allRectifier);
 electrical.get('/rectifier', Rectifier);
-electrical.post('/rectifier', createRectifier);
-electrical.put('/rectifier', updateRectifier);
+electrical.post('/rectifier', upload.array('images', 3), createRectifier);
+electrical.put('/rectifier', upload.array('images', 3), updateRectifier);
 electrical.delete('/rectifier', deleteRectifier);
 
 // brand rectifier
@@ -118,8 +159,8 @@ electrical.delete('/rectifier/brand', deleteBrandRectifier);
 // Battery
 electrical.get('/batteries', allBattery);
 electrical.get('/battery', Battery);
-electrical.post('/battery', createBattery);
-electrical.put('/battery', updateBattery);
+electrical.post('/battery', upload.array('images', 3), createBattery);
+electrical.put('/battery', upload.array('images', 3), updateBattery);
 electrical.delete('/battery', deleteBattery);
 
 // brand Battery
@@ -132,29 +173,68 @@ electrical.delete('/battery/brand', deleteBrandBattery);
 // panel
 electrical.get('/panels', allPanel);
 electrical.get('/panel', Panel);
-electrical.post('/panel', createPanel);
-electrical.put('/panel', updatePanel);
+electrical.post('/panel', upload.array('images', 3), createPanel);
+electrical.put('/panel', upload.array('images', 3), updatePanel);
 electrical.delete('/panel', deletePanel);
 
 // ups
 electrical.get('/upsies', allUps);
 electrical.get('/ups', Ups);
-electrical.post('/ups', createUps);
-electrical.put('/ups', updateUps);
+electrical.post('/ups', upload.array('images', 3), createUps);
+electrical.put('/ups', upload.array('images', 3), updateUps);
 electrical.delete('/ups', deleteUps);
 
 // brand ups
 electrical.get('/ups/brands', allBrandUps);
 electrical.get('/ups/brand', brandUps);
-electrical.post('/ups/brand', createBrandUps);
-electrical.put('/ups/brand', updateBrandUps);
+electrical.post('/ups/brand', upload.array('images', 3), createBrandUps);
+electrical.put('/ups/brand', upload.array('images', 3), updateBrandUps);
 electrical.delete('/ups/brand', deleteBrandUps);
 
 // trafo
 electrical.get('/trafos', allTrafo);
 electrical.get('/trafo', Trafo);
-electrical.post('/trafo', createTrafo);
-electrical.put('/trafo', updateTrafo);
+electrical.post('/trafo', upload.array('images', 3), createTrafo);
+electrical.put('/trafo', upload.array('images', 3), updateTrafo);
 electrical.delete('/trafo', deleteTrafo);
+
+// genset
+electrical.get('/gensets', allGenset);
+electrical.get('/genset', Genset);
+electrical.post('/genset', upload.array('images', 3), createGenset);
+electrical.put('/genset', upload.array('images', 3), updateGenset);
+electrical.delete('/genset', deleteGenset);
+
+// brand genset
+electrical.get('/genset/brands', allBrandGenset);
+electrical.get('/genset/brand', brandGenset);
+electrical.post('/genset/brand', createBrandGenset);
+electrical.put('/genset/brand', updateBrandGenset);
+electrical.delete('/genset/brand', deleteBrandGenset);
+
+// pdu
+electrical.get('/pdus', allPdu);
+electrical.get('/pdu', Pdu);
+electrical.post('/pdu', upload.array('images', 3), createPdu);
+electrical.put('/pdu', upload.array('images', 3), updatePdu);
+electrical.delete('/pdu', deletePdu);
+
+// brand pdu
+electrical.get('/pdu/brands', allBrandPdu);
+electrical.get('/pdu/brand', brandPdu);
+electrical.post('/pdu/brand', createBrandPdu);
+electrical.put('/pdu/brand', updateBrandPdu);
+electrical.delete('/pdu/brand', deleteBrandPdu);
+
+// pdu
+electrical.get('/cubicles', allCubicle);
+electrical.get('/cubicle', Cubicle);
+electrical.post('/cubicle', upload.array('images', 3), createCubicle);
+electrical.put('/cubicle', upload.array('images', 3), updateCubicle);
+electrical.delete('/cubicle', deleteCubicle);
+
+electrical.post('/images', upload.array('images', 3), uploadElectricalImage);
+electrical.get('/images', getElectricalImagesByAssetId);
+electrical.put('/images', upload.array('images', 3), updateElectricalImages);
 
 export default electrical;
