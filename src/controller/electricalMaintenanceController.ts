@@ -10,6 +10,7 @@ export const allElectricalMaintenance = async (req: Request, res: Response) => {
     res,
     connectMySQL,
     `SELECT * FROM maintenance_electrical`,
+    `maintenance_electrical`,
   );
 };
 

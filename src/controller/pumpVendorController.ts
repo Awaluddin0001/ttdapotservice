@@ -5,7 +5,13 @@ import { deleteRow } from '../utils/deleteData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 
 export const allpumpVendor = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM pump_vendor`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM pump_vendor`,
+    `pump_vendor`,
+  );
 };
 
 export const pumpVendor = async (req: Request, res: Response) => {

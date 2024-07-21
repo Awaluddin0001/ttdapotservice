@@ -10,6 +10,7 @@ export const allextinguishMaintenance = async (req: Request, res: Response) => {
     res,
     connectMySQL,
     `SELECT * FROM maintenance_extinguish`,
+    `maintenance_extinguish`,
   );
 };
 

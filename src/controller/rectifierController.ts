@@ -32,6 +32,7 @@ export const allRectifier = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
     LEFT JOIN electrical el ON r.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `rectifier`,
   );
 };
 
@@ -147,7 +148,13 @@ export const deleteRectifier = async (req: Request, res: Response) => {
 };
 
 export const allBrandRecti = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM rectifier_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM rectifier_brand`,
+    `rectifier_brand`,
+  );
 };
 
 export const brandRectifier = async (req: Request, res: Response) => {

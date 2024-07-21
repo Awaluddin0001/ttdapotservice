@@ -28,6 +28,7 @@ export const allConveyance = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_conveyance m ON t.maintenance_id = m.id
     LEFT JOIN conveyance el ON t.id = el.type_id
     LEFT JOIN conveyance_photo ep ON el.id = ep.asset_id`,
+    `conveyance_type`,
   );
 };
 

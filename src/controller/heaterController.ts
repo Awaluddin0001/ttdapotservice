@@ -4,7 +4,7 @@ import { deleteCombinedRow } from '../utils/deleteData';
 import { getAllRow, getOneRow } from '../utils/getData';
 import { createRowac, updateRowac } from '../utils/CreatePutDataAir';
 
-export const allCeiling = async (req: Request, res: Response) => {
+export const allHeater = async (req: Request, res: Response) => {
   await getAllRow(
     req,
     res,
@@ -25,10 +25,11 @@ export const allCeiling = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_ac m ON t.maintenance_id = m.id
     LEFT JOIN air_conditioning el ON t.id = el.device_id
     LEFT JOIN air_conditioning_photo ep ON el.id = ep.asset_id`,
+    `heating_device`,
   );
 };
 
-export const Ceiling = async (req: Request, res: Response) => {
+export const Heater = async (req: Request, res: Response) => {
   await getOneRow(
     req,
     res,
@@ -53,7 +54,7 @@ export const Ceiling = async (req: Request, res: Response) => {
   );
 };
 
-export const createCeiling = async (req: Request, res: Response) => {
+export const createHeater = async (req: Request, res: Response) => {
   const deviceColumns = [
     'vendor_id',
     'user_id',
@@ -83,7 +84,7 @@ export const createCeiling = async (req: Request, res: Response) => {
   );
 };
 
-export const updateCeiling = async (req: Request, res: Response) => {
+export const updateHeater = async (req: Request, res: Response) => {
   const deviceColumns = [
     'vendor_id',
     'user_id',
@@ -112,7 +113,7 @@ export const updateCeiling = async (req: Request, res: Response) => {
   );
 };
 
-export const deleteCeiling = async (req: Request, res: Response) => {
+export const deleteHeater = async (req: Request, res: Response) => {
   await deleteCombinedRow(
     req,
     res,

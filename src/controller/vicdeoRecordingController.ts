@@ -31,6 +31,7 @@ export const allVideoRecording = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
     LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
+    `video_recording`,
   );
 };
 
@@ -142,6 +143,7 @@ export const allBrandVideoRecording = async (req: Request, res: Response) => {
     res,
     connectMySQL,
     `SELECT * FROM video_recording_brand`,
+    `video_recording_brand`,
   );
 };
 

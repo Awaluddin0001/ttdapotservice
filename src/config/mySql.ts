@@ -15,11 +15,10 @@ const connectMySQL = async () => {
       database: process.env.MYSQL_DATABASE || 'monitorttcpengayoman',
       port: Number(process.env.MYSQL_PORT) || 3306,
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 200,
       queueLimit: 0,
     });
 
-    console.log('Connected to MySQL');
     return pool;
   } catch (err) {
     console.error('Failed to connect to MySQL:', err);

@@ -7,13 +7,13 @@ import { RowDataPacket } from 'mysql2';
 
 export const uploadElectricalImage = async (req: Request, res: Response) => {
   const { asset_id, user_id } = req.body;
-  if (!req.files || !(req.files instanceof Array) || req.files.length === 0) {
+  if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
     return res.status(400).json({ message: 'No files uploaded.' });
   }
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   try {
     const db = await connectMySQL();
-    const fileNames = req.files.map((file) => file.filename);
+    const fileNames = req.body.images.map((file: any) => file.filename);
     const storeData = [asset_id, ...fileNames, now, user_id];
     const query =
       'INSERT INTO electrical_photo (asset_id, foto1, foto2, foto3, created_at, user_id) VALUES (?, ?, ?, ?,?,?)';
@@ -56,13 +56,13 @@ export const getElectricalImagesByAssetId = async (
 
 export const updateElectricalImages = async (req: Request, res: Response) => {
   const { asset_id, user_id } = req.body;
-  if (!req.files || !(req.files instanceof Array) || req.files.length === 0) {
+  if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
     return res.status(400).json({ message: 'No files uploaded.' });
   }
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   try {
     const db = await connectMySQL();
-    const fileNames = req.files.map((file) => file.filename);
+    const fileNames = req.body.images.map((file: any) => file.filename);
     const updateData = [
       fileNames[0],
       fileNames[1],

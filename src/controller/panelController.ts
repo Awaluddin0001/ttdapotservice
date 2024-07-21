@@ -17,14 +17,15 @@ export const allPanel = async (req: Request, res: Response) => {
             ep.foto2 AS photo2,
             ep.foto3 AS photo3,
             DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-            DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-            DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+            DATE_FORMAT(p.installation_date, "%Y-%m-%d") AS installation_date, 
+            DATE_FORMAT(p.created_at, "%Y-%m-%d") AS created_at
           FROM panel p
           LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
           LEFT JOIN user u ON p.user_id = u.id
           LEFT JOIN maintenance_electrical m ON p.maintenance_id = m.id
           LEFT JOIN electrical el ON p.id = el.device_id
           LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `panel`,
   );
 };
 export const Panel = async (req: Request, res: Response) => {
@@ -40,8 +41,8 @@ export const Panel = async (req: Request, res: Response) => {
             ep.foto2 AS photo2,
             ep.foto3 AS photo3,
             DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-            DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-            DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+            DATE_FORMAT(p.installation_date, "%Y-%m-%d") AS installation_date, 
+            DATE_FORMAT(p.created_at, "%Y-%m-%d") AS created_at
           FROM panel p
           LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
           LEFT JOIN user u ON p.user_id = u.id

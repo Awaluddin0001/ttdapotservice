@@ -8,7 +8,13 @@ export const allairconditioningMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM maintenance_ac`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM maintenance_ac`,
+    `maintenance_ac`,
+  );
 };
 
 export const airconditioningMaintenance = async (

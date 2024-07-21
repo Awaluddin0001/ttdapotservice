@@ -33,6 +33,7 @@ export const allNetworkswitch = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
+    `network_switches`,
   );
 };
 
@@ -158,6 +159,7 @@ export const allBrandNetworkswitch = async (req: Request, res: Response) => {
     res,
     connectMySQL,
     `SELECT * FROM network_switches_brand`,
+    `network_switches_brand`,
   );
 };
 

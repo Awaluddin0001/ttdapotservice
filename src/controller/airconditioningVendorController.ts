@@ -10,6 +10,7 @@ export const allairconditioningVendor = async (req: Request, res: Response) => {
     res,
     connectMySQL,
     `SELECT * FROM air_conditioning_vendor`,
+    `air_conditioning_vendor`,
   );
 };
 

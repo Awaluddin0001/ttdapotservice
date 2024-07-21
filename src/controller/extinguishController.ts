@@ -34,6 +34,7 @@ export const allExtinguish = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_extinguish m ON r.maintenance_id = m.id
     LEFT JOIN extinguish el ON r.id = el.device_id
     LEFT JOIN extinguish_photo ep ON el.id = ep.asset_id`,
+    `cylinder_device`,
   );
 };
 
@@ -144,7 +145,13 @@ export const deleteExtinguish = async (req: Request, res: Response) => {
 };
 
 export const allBrandExtinguish = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM cylinder_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM cylinder_brand`,
+    `cylinder_brand`,
+  );
 };
 
 export const brandExtinguish = async (req: Request, res: Response) => {
@@ -176,7 +183,13 @@ export const deleteBrandExtinguish = async (req: Request, res: Response) => {
 };
 
 export const allmodelExtinguish = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM cylinder_model`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM cylinder_model`,
+    `cylinder_model`,
+  );
 };
 
 export const modelExtinguish = async (req: Request, res: Response) => {

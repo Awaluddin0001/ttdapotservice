@@ -23,8 +23,8 @@ export const allGenset = async (req: Request, res: Response) => {
           ep.foto2 AS photo2,
           ep.foto3 AS photo3,
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+          DATE_FORMAT(g.installation_date, "%Y-%m-%d") AS installation_date, 
+          DATE_FORMAT(g.created_at, "%Y-%m-%d") AS created_at
     FROM genset g
     LEFT JOIN genset_brand b ON g.brand_id = b.id
     LEFT JOIN electrical_vendor v ON g.vendor_id = v.id
@@ -32,6 +32,7 @@ export const allGenset = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_electrical m ON g.maintenance_id = m.id
     LEFT JOIN electrical el ON g.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `genset`,
   );
 };
 
@@ -49,8 +50,8 @@ export const Genset = async (req: Request, res: Response) => {
           ep.foto2 AS photo2,
           ep.foto3 AS photo3,
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+          DATE_FORMAT(g.installation_date, "%Y-%m-%d") AS installation_date, 
+          DATE_FORMAT(g.created_at, "%Y-%m-%d") AS created_at
     FROM genset g
     LEFT JOIN genset_brand b ON g.brand_id = b.id
     LEFT JOIN electrical_vendor v ON g.vendor_id = v.id
@@ -141,7 +142,13 @@ export const deleteGenset = async (req: Request, res: Response) => {
 };
 
 export const allBrandGenset = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM genset_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM genset_brand`,
+    `genset_brand`,
+  );
 };
 
 export const brandGenset = async (req: Request, res: Response) => {

@@ -67,9 +67,9 @@ export const createRow = async (
     await insertRow(pool, electricalQuery, electricalParams);
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
+    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+      for (let i = 0; i < req.body.images.length; i++) {
+        const file = req.body.images[i];
         const newFileName = generateImageFileName('ELPHO', newDeviceId, i + 1);
         const newPath = path.join(
           __dirname,
@@ -105,7 +105,6 @@ export const createEntity = async (
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   const pool = await connectMySQL();
-
   try {
     const newId = await getNewId(pool, tableName, prefix, 3);
     const params = [
@@ -123,9 +122,9 @@ export const createEntity = async (
 
     // Menyimpan gambar jika ada
     if (folderPath) {
-      if (req.files && req.files instanceof Array) {
-        for (let i = 0; i < req.files.length; i++) {
-          const file = req.files[i];
+      if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+        for (let i = 0; i < req.body.images.length; i++) {
+          const file = req.body.images[i];
           const newFileName = generateImageFileName(
             `${prefixPhoto}`,
             newId,
@@ -207,9 +206,9 @@ export const updateRow = async (
     );
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
+    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+      for (let i = 0; i < req.body.images.length; i++) {
+        const file = req.body.images[i];
         const newFileName = generateImageFileName('ELPHO', id as string, i + 1);
         const newPath = path.join(
           __dirname,
@@ -266,9 +265,9 @@ export const updateEntity = async (
 
     // Menyimpan gambar jika ada
     if (folderPath) {
-      if (req.files && req.files instanceof Array) {
-        for (let i = 0; i < req.files.length; i++) {
-          const file = req.files[i];
+      if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+        for (let i = 0; i < req.body.images.length; i++) {
+          const file = req.body.images[i];
           const newFileName = generateImageFileName(
             `${prefixPhoto}`,
             id as string,

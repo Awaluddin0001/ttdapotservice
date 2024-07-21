@@ -13,6 +13,7 @@ export const allbuildingfinishesVendor = async (
     res,
     connectMySQL,
     `SELECT * FROM building_finishes_vendor`,
+    `building_finishes_vendor`,
   );
 };
 

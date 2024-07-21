@@ -13,6 +13,7 @@ export const allbuildingfinisherMaintenance = async (
     res,
     connectMySQL,
     `SELECT * FROM maintenance_building_finisher`,
+    `maintenance_building_finisher`,
   );
 };
 

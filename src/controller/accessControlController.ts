@@ -31,6 +31,7 @@ export const allAccessControl = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
         LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
+    `access_control`,
   );
 };
 
@@ -123,7 +124,13 @@ export const deleteAccessControl = async (req: Request, res: Response) => {
 };
 
 export const allBrandAccessControl = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM access_control_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM access_control_brand`,
+    `access_control_brand`,
+  );
 };
 
 export const brandAccessControl = async (req: Request, res: Response) => {

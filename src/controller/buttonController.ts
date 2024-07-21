@@ -31,6 +31,7 @@ export const allButton = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
      LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
+    `button`,
   );
 };
 
@@ -117,7 +118,13 @@ export const deleteButton = async (req: Request, res: Response) => {
 };
 
 export const allBrandButton = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM button_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM button_brand`,
+    `button_brand`,
+  );
 };
 
 export const brandButton = async (req: Request, res: Response) => {

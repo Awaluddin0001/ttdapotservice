@@ -28,6 +28,7 @@ export const allComputer = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON t.maintenance_id = m.id
     LEFT JOIN network_it el ON t.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
+    `computer`,
   );
 };
 

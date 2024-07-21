@@ -33,6 +33,7 @@ export const allFirewall = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
+    `firewalls`,
   );
 };
 
@@ -153,7 +154,13 @@ export const deleteFirewall = async (req: Request, res: Response) => {
 };
 
 export const allBrandFirewall = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM firewalls_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM firewalls_brand`,
+    `firewalls_brand`,
+  );
 };
 
 export const brandFirewall = async (req: Request, res: Response) => {

@@ -23,8 +23,8 @@ export const allPdu = async (req: Request, res: Response) => {
           ep.foto2 AS photo2,
           ep.foto3 AS photo3,
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+          DATE_FORMAT(p.installation_date, "%Y-%m-%d") AS installation_date, 
+          DATE_FORMAT(p.created_at, "%Y-%m-%d") AS created_at
     FROM pdu p
     LEFT JOIN pdu_brand b ON p.brand_id = b.id
     LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
@@ -32,6 +32,7 @@ export const allPdu = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_electrical m ON p.maintenance_id = m.id
     LEFT JOIN electrical el ON p.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `pdu`,
   );
 };
 
@@ -49,8 +50,8 @@ export const Pdu = async (req: Request, res: Response) => {
           ep.foto2 AS photo2,
           ep.foto3 AS photo3,
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+          DATE_FORMAT(p.installation_date, "%Y-%m-%d") AS installation_date, 
+          DATE_FORMAT(p.created_at, "%Y-%m-%d") AS created_at
     FROM pdu p
     LEFT JOIN pdu_brand b ON p.brand_id = b.id
     LEFT JOIN electrical_vendor v ON p.vendor_id = v.id
@@ -130,7 +131,13 @@ export const deletePdu = async (req: Request, res: Response) => {
 };
 
 export const allBrandPdu = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM pdu_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM pdu_brand`,
+    `pdu_brand`,
+  );
 };
 
 export const brandPdu = async (req: Request, res: Response) => {

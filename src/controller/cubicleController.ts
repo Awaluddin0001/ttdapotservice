@@ -17,14 +17,15 @@ export const allCubicle = async (req: Request, res: Response) => {
     ep.foto2 AS photo2,
     ep.foto3 AS photo3,
     DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-    DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-    DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+    DATE_FORMAT(c.installation_date, "%Y-%m-%d") AS installation_date, 
+    DATE_FORMAT(c.created_at, "%Y-%m-%d") AS created_at
   FROM cubicle c
   LEFT JOIN electrical_vendor v ON c.vendor_id = v.id
   LEFT JOIN user u ON c.user_id = u.id
   LEFT JOIN maintenance_electrical m ON c.maintenance_id = m.id
   LEFT JOIN electrical el ON c.id = el.device_id
   LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `cubicle`,
   );
 };
 export const Cubicle = async (req: Request, res: Response) => {
@@ -40,8 +41,8 @@ export const Cubicle = async (req: Request, res: Response) => {
     ep.foto2 AS photo2,
     ep.foto3 AS photo3,
     DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-    DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-    DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+    DATE_FORMAT(c.installation_date, "%Y-%m-%d") AS installation_date, 
+    DATE_FORMAT(c.created_at, "%Y-%m-%d") AS created_at
   FROM cubicle c
   LEFT JOIN electrical_vendor v ON c.vendor_id = v.id
   LEFT JOIN user u ON c.user_id = u.id

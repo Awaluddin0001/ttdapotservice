@@ -5,7 +5,13 @@ import { deleteRow } from '../utils/deleteData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 
 export const allsecurityMaintenance = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM maintenance_security`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM maintenance_security`,
+    `maintenance_security`,
+  );
 };
 
 export const securityMaintenance = async (req: Request, res: Response) => {

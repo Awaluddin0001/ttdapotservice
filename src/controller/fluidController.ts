@@ -25,6 +25,7 @@ export const allFluid = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_fluid m ON t.maintenance_id = m.id
     LEFT JOIN fluid el ON t.id = el.tank_id
     LEFT JOIN fluid_photo ep ON el.id = ep.asset_id`,
+    `tank_type`,
   );
 };
 

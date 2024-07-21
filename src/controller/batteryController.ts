@@ -27,8 +27,8 @@ export const allBattery = async (req: Request, res: Response) => {
             ep.foto2 AS photo2,
             ep.foto3 AS photo3,
             DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-            DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-            DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+            DATE_FORMAT(ba.installation_date, "%Y-%m-%d") AS installation_date, 
+            DATE_FORMAT(ba.created_at, "%Y-%m-%d") AS created_at
           FROM battery ba
           LEFT JOIN battery_brand b ON ba.brand_id = b.id
           LEFT JOIN electrical_vendor v ON ba.vendor_id = v.id
@@ -36,6 +36,7 @@ export const allBattery = async (req: Request, res: Response) => {
           LEFT JOIN maintenance_electrical m ON ba.maintenance_id = m.id
           LEFT JOIN electrical el ON ba.id = el.device_id
           LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `battery`,
   );
 };
 export const Battery = async (req: Request, res: Response) => {
@@ -52,8 +53,8 @@ export const Battery = async (req: Request, res: Response) => {
           ep.foto2 AS photo2,
           ep.foto3 AS photo3,
           DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+          DATE_FORMAT(ba.installation_date, "%Y-%m-%d") AS installation_date, 
+          DATE_FORMAT(ba.created_at, "%Y-%m-%d") AS created_at
         FROM battery ba
         LEFT JOIN battery_brand b ON ba.brand_id = b.id
         LEFT JOIN electrical_vendor v ON ba.vendor_id = v.id
@@ -147,7 +148,13 @@ export const deleteBattery = async (req: Request, res: Response) => {
 };
 
 export const allBrandBattery = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM battery_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM battery_brand`,
+    `battery_brand`,
+  );
 };
 
 export const brandBattery = async (req: Request, res: Response) => {

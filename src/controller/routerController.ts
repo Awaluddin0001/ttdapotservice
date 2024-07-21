@@ -33,6 +33,7 @@ export const allRouter = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
+    `routers`,
   );
 };
 
@@ -147,7 +148,13 @@ export const deleteRouter = async (req: Request, res: Response) => {
 };
 
 export const allBrandRouter = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM routers_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM routers_brand`,
+    `routers_brand`,
+  );
 };
 
 export const brandRouter = async (req: Request, res: Response) => {

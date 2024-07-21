@@ -31,6 +31,7 @@ export const allRackserver = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
+    `rack_server`,
   );
 };
 
@@ -149,7 +150,13 @@ export const deleteRackserver = async (req: Request, res: Response) => {
 };
 
 export const allBrandRackserver = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM rack_server_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM rack_server_brand`,
+    `rack_server_brand`,
+  );
 };
 
 export const brandRackserver = async (req: Request, res: Response) => {

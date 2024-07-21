@@ -30,6 +30,7 @@ export const allCooling = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_ac m ON r.maintenance_id = m.id
     LEFT JOIN air_conditioning el ON r.id = el.device_id
     LEFT JOIN air_conditioning_photo ep ON el.id = ep.asset_id`,
+    `cooling_device`,
   );
 };
 
@@ -150,7 +151,13 @@ export const deleteCooling = async (req: Request, res: Response) => {
 };
 
 export const allBrandCooling = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM cooling_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM cooling_brand`,
+    `cooling_brand`,
+  );
 };
 
 export const brandCooling = async (req: Request, res: Response) => {
@@ -182,7 +189,13 @@ export const deleteBrandCooling = async (req: Request, res: Response) => {
 };
 
 export const allmodelCooling = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM cooling_model`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM cooling_model`,
+    `cooling_model`,
+  );
 };
 
 export const modelCooling = async (req: Request, res: Response) => {

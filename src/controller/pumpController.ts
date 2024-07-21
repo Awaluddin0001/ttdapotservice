@@ -28,6 +28,7 @@ export const allPump = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_pump m ON r.maintenance_id = m.id
         LEFT JOIN pump el ON r.id = el.device_id
     LEFT JOIN pump_photo ep ON el.id = ep.asset_id`,
+    `pump_device`,
   );
 };
 
@@ -134,7 +135,13 @@ export const deletePump = async (req: Request, res: Response) => {
 };
 
 export const allBrandpump = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM pump_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM pump_brand`,
+    `pump_brand`,
+  );
 };
 
 export const brandpump = async (req: Request, res: Response) => {

@@ -68,9 +68,9 @@ export const createRowPump = async (
     await insertRow(pool, deviceQuery, deviceParams);
     await insertRow(pool, electricalQuery, pumpParams);
 
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
+    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+      for (let i = 0; i < req.body.images.length; i++) {
+        const file = req.body.images[i];
         const newFileName = generateImageFileName('PUPHO', newDeviceId, i + 1);
         const newPath = path.join(
           __dirname,
@@ -147,9 +147,9 @@ export const updateRowPump = async (
     );
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
+    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
+      for (let i = 0; i < req.body.images.length; i++) {
+        const file = req.body.images[i];
         const newFileName = generateImageFileName('PUPHO', id as string, i + 1);
         const newPath = path.join(
           __dirname,

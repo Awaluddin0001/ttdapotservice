@@ -27,8 +27,8 @@ export const allUps = async (req: Request, res: Response) => {
             ep.foto2 AS photo2,
             ep.foto3 AS photo3,
             DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-            DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-            DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+            DATE_FORMAT(up.installation_date, "%Y-%m-%d") AS installation_date, 
+            DATE_FORMAT(up.created_at, "%Y-%m-%d") AS created_at
           FROM ups up
           LEFT JOIN ups_brand b ON up.brand_id = b.id
           LEFT JOIN electrical_vendor v ON up.vendor_id = v.id
@@ -36,6 +36,7 @@ export const allUps = async (req: Request, res: Response) => {
           LEFT JOIN maintenance_electrical m ON up.maintenance_id = m.id
           LEFT JOIN electrical el ON up.id = el.device_id
           LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
+    `ups`,
   );
 };
 export const Ups = async (req: Request, res: Response) => {
@@ -52,8 +53,8 @@ export const Ups = async (req: Request, res: Response) => {
             ep.foto2 AS photo2,
             ep.foto3 AS photo3,
             DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-            DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-            DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
+            DATE_FORMAT(up.installation_date, "%Y-%m-%d") AS installation_date, 
+            DATE_FORMAT(up.created_at, "%Y-%m-%d") AS created_at
           FROM ups up
           LEFT JOIN ups_brand b ON up.brand_id = b.id
           LEFT JOIN electrical_vendor v ON up.vendor_id = v.id
@@ -140,7 +141,13 @@ export const deleteUps = async (req: Request, res: Response) => {
 };
 
 export const allBrandUps = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM ups_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM ups_brand`,
+    `ups_brand`,
+  );
 };
 
 export const brandUps = async (req: Request, res: Response) => {

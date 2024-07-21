@@ -31,6 +31,7 @@ export const allDetektor = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
     LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
+    `detector`,
   );
 };
 
@@ -123,7 +124,13 @@ export const deleteDetektor = async (req: Request, res: Response) => {
 };
 
 export const allBrandDetektor = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM detector_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM detector_brand`,
+    `detector_brand`,
+  );
 };
 
 export const brandDetektor = async (req: Request, res: Response) => {

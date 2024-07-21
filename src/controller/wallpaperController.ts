@@ -29,6 +29,7 @@ export const allwallpaper = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_building_finisher m ON t.maintenance_id = m.id
     LEFT JOIN building_finishes el ON t.id = el.category_id
     LEFT JOIN building_finishes_photo ep ON el.id = ep.asset_id`,
+    `wallpaper`,
   );
 };
 

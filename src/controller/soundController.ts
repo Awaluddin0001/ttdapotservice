@@ -31,6 +31,7 @@ export const allSound = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
         LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
+    `sound`,
   );
 };
 
@@ -117,7 +118,13 @@ export const deleteSound = async (req: Request, res: Response) => {
 };
 
 export const allBrandSound = async (req: Request, res: Response) => {
-  await getAllRow(req, res, connectMySQL, `SELECT * FROM sound_brand`);
+  await getAllRow(
+    req,
+    res,
+    connectMySQL,
+    `SELECT * FROM sound_brand`,
+    `sound_brand`,
+  );
 };
 
 export const brandSound = async (req: Request, res: Response) => {
