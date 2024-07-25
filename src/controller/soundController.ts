@@ -5,7 +5,7 @@ import { getAllRow, getOneRow } from '../utils/getData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
-  updateRowSeurity,
+  updateRowSecurity,
 } from '../utils/CreatePutDataSecurity';
 
 export const allSound = async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ export const updateSound = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await updateRowSeurity(req, res, 'sound', deviceColumns, electricalColumns);
+  await updateRowSecurity(req, res, 'sound', deviceColumns, electricalColumns);
 };
 
 export const deleteSound = async (req: Request, res: Response) => {

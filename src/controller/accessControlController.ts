@@ -5,7 +5,7 @@ import { getAllRow, getOneRow } from '../utils/getData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
-  updateRowSeurity,
+  updateRowSecurity,
 } from '../utils/CreatePutDataSecurity';
 
 export const allAccessControl = async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ export const updateAccessControl = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await updateRowSeurity(
+  await updateRowSecurity(
     req,
     res,
     'access_control',

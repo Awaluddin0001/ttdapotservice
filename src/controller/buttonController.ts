@@ -5,7 +5,7 @@ import { getAllRow, getOneRow } from '../utils/getData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
-  updateRowSeurity,
+  updateRowSecurity,
 } from '../utils/CreatePutDataSecurity';
 
 export const allButton = async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ export const updateButton = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await updateRowSeurity(req, res, 'button', deviceColumns, electricalColumns);
+  await updateRowSecurity(req, res, 'button', deviceColumns, electricalColumns);
 };
 
 export const deleteButton = async (req: Request, res: Response) => {

@@ -5,7 +5,7 @@ import { getAllRow, getOneRow } from '../utils/getData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
-  updateRowSeurity,
+  updateRowSecurity,
 } from '../utils/CreatePutDataSecurity';
 
 export const allAlarm = async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ export const updateAlarm = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await updateRowSeurity(req, res, 'alarm', deviceColumns, electricalColumns);
+  await updateRowSecurity(req, res, 'alarm', deviceColumns, electricalColumns);
 };
 
 export const deleteAlarm = async (req: Request, res: Response) => {

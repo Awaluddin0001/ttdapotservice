@@ -36,53 +36,59 @@ const deleteImageFiles = async (
 export const deleteCombinedRow = async (
   req: Request,
   res: Response,
-  poolMysql: () => Promise<Pool>,
+  pool: Pool,
   query1: string,
   query2: string,
   query3: string,
   folderPath: string,
 ) => {
   const { id } = req.query;
+  let connection;
   try {
-    const pool = await poolMysql();
+    connection = await pool.getConnection();
 
     // Hapus file gambar terkait
     await deleteImageFiles(pool, id as string, folderPath);
 
     // Hapus data dari database
-    await pool.query<RowDataPacket[]>(query1, [id]);
-    await pool.query<RowDataPacket[]>(query2, [id]);
-    await pool.query<RowDataPacket[]>(query3, [id]);
+    await connection.query<RowDataPacket[]>(query1, [id]);
+    await connection.query<RowDataPacket[]>(query2, [id]);
+    await connection.query<RowDataPacket[]>(query3, [id]);
 
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
     res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
   }
 };
 
 export const deleteRow = async (
   req: Request,
   res: Response,
-  poolMysql: () => Promise<Pool>,
+  pool: Pool,
   query: string,
   query2?: string,
   folderPath?: string,
 ) => {
   const { id } = req.query;
+  let connection;
   try {
-    const pool = await poolMysql();
+    connection = await pool.getConnection();
 
     // Hapus file gambar terkait
     if (folderPath && query2) {
       await deleteImageFiles(pool, id as string, folderPath);
-      await pool.query<RowDataPacket[]>(query2, [id]);
+      await connection.query<RowDataPacket[]>(query2, [id]);
     }
 
-    await pool.query<RowDataPacket[]>(query, [id]);
+    await connection.query<RowDataPacket[]>(query, [id]);
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
     res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
   }
 };

@@ -4,7 +4,7 @@ import { Pool } from 'mysql2/promise';
 import moment from 'moment-timezone';
 import { makeIdTable } from './makeIdTable';
 import fs from 'fs';
-import connectMySQL from '../config/mySql';
+import pool from '../config/mySql'; // Import pool langsung
 import { generateImageFileName } from './generateImageFileName';
 import path from 'path';
 
@@ -42,9 +42,11 @@ export const createRowSecurity = async (
   airconditioningColumns: string[],
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
-  const pool = await connectMySQL();
+  let connection;
 
   try {
+    connection = await pool.getConnection();
+
     const newDeviceId = await getNewId(pool, deviceTable, devicePrefix, 3);
     const newairconditioningId = await getNewId(pool, 'security', 'SE', 6);
 
@@ -68,9 +70,9 @@ export const createRowSecurity = async (
     await insertRow(pool, deviceQuery, deviceParams);
     await insertRow(pool, electricalQuery, airconditioningParams);
 
-    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
-      for (let i = 0; i < req.body.images.length; i++) {
-        const file = req.body.images[i];
+    if (req.files && req.files instanceof Array) {
+      for (let i = 0; i < req.files.length; i++) {
+        const file = req.files[i];
         const newFileName = generateImageFileName('SEPHO', newDeviceId, i + 1);
         const newPath = path.join(
           __dirname,
@@ -91,6 +93,8 @@ export const createRowSecurity = async (
   } catch (error) {
     console.error('Error creating device:', error);
     res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
   }
 };
 
@@ -103,7 +107,7 @@ const updateARow = async (
 };
 
 // Fungsi utama untuk updateRectifier dan updatePanel
-export const updateRowSeurity = async (
+export const updateRowSecurity = async (
   req: Request,
   res: Response,
   deviceTable: string,
@@ -112,9 +116,11 @@ export const updateRowSeurity = async (
 ) => {
   const { id } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
-  const pool = await connectMySQL();
+  let connection;
 
   try {
+    connection = await pool.getConnection();
+
     const deviceParams = [
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
@@ -147,9 +153,9 @@ export const updateRowSeurity = async (
     );
 
     // Menyimpan gambar jika ada
-    if (req.body.images[0] || req.body.images[1] || req.body.images[2]) {
-      for (let i = 0; i < req.body.images.length; i++) {
-        const file = req.body.images[i];
+    if (req.files && req.files instanceof Array) {
+      for (let i = 0; i < req.files.length; i++) {
+        const file = req.files[i];
         const newFileName = generateImageFileName('SEPHO', id as string, i + 1);
         const newPath = path.join(
           __dirname,
@@ -170,5 +176,7 @@ export const updateRowSeurity = async (
   } catch (error) {
     console.error('Error updating device:', error);
     res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
   }
 };

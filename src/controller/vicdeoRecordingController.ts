@@ -5,7 +5,7 @@ import { getAllRow, getOneRow } from '../utils/getData';
 import { createEntity, updateEntity } from '../utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
-  updateRowSeurity,
+  updateRowSecurity,
 } from '../utils/CreatePutDataSecurity';
 
 export const allVideoRecording = async (req: Request, res: Response) => {
@@ -116,7 +116,7 @@ export const updateVideoRecording = async (req: Request, res: Response) => {
     'notes',
     'user_id',
   ];
-  await updateRowSeurity(
+  await updateRowSecurity(
     req,
     res,
     'video_recording',

@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
     if (req.url.includes('electrical')) {
       uploadPath = path.join(uploadPath, '/electrical');
     } else if (req.url.includes('air_conditioning')) {
-      uploadPath = path.join(uploadPath, 'air_conditioning');
+      uploadPath = path.join(uploadPath, '/air_conditioning');
     }
     cb(null, uploadPath);
   },
