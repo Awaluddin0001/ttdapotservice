@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   securityVendor,
@@ -7,7 +7,7 @@ import {
   createsecurityVendor,
   deletesecurityVendor,
   updatesecurityVendor,
-} from '../controller/securityVendorController';
+} from '../controller/security/vendor/securityVendorController';
 
 import {
   createMaintenancesecurity,
@@ -15,7 +15,7 @@ import {
   deletesecurityMaintenance,
   securityMaintenance,
   updatesecurityMaintenance,
-} from '../controller/securityMaintenanceController';
+} from '../controller/security/maintenance/securityMaintenanceController';
 
 import {
   Cctv,
@@ -28,7 +28,7 @@ import {
   deleteCctv,
   updateBrandCctv,
   updateCctv,
-} from '../controller/cctvController';
+} from '../controller/security/category/cctvController';
 
 import {
   VideoRecording,
@@ -41,7 +41,7 @@ import {
   deleteVideoRecording,
   updateBrandVideoRecording,
   updateVideoRecording,
-} from '../controller/vicdeoRecordingController';
+} from '../controller/security/category/vicdeoRecordingController';
 
 import {
   AccessControl,
@@ -54,7 +54,7 @@ import {
   deleteBrandAccessControl,
   updateAccessControl,
   updateBrandAccessControl,
-} from '../controller/accessControlController';
+} from '../controller/security/category/accessControlController';
 
 import {
   Alarm,
@@ -67,7 +67,7 @@ import {
   deleteBrandAlarm,
   updateAlarm,
   updateBrandAlarm,
-} from '../controller/alarmController';
+} from '../controller/security/category/alarmController';
 
 import {
   Button,
@@ -80,7 +80,7 @@ import {
   deleteButton,
   updateBrandButton,
   updateButton,
-} from '../controller/buttonController';
+} from '../controller/security/category/buttonController';
 
 import {
   Detektor,
@@ -93,7 +93,7 @@ import {
   deleteDetektor,
   updateBrandDetektor,
   updateDetektor,
-} from '../controller/detectorController';
+} from '../controller/security/category/detectorController';
 
 import {
   Sound,
@@ -106,7 +106,7 @@ import {
   deleteSound,
   updateBrandSound,
   updateSound,
-} from '../controller/soundController';
+} from '../controller/security/category/soundController';
 
 const network = Router();
 

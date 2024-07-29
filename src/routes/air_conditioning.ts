@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
-
+import { upload } from '@/utils/imageUpload';
 import {
   airconditioningVendor,
   allairconditioningVendor,
   createairconditioningVendor,
   deleteairconditioningVendor,
   updateairconditioningVendor,
-} from '../controller/airconditioningVendorController';
+} from '../controller/air_conditioning/vendor/airconditioningVendorController';
 
 import {
   airconditioningMaintenance,
@@ -15,7 +14,7 @@ import {
   createMaintenanceairconditioning,
   deleteairconditioningMaintenance,
   updateairconditioningMaintenance,
-} from '../controller/airconditioningMaintenanceController';
+} from '../controller/air_conditioning/maintenance/airconditioningMaintenanceController';
 
 import {
   Air,
@@ -28,7 +27,7 @@ import {
   deleteBrandAir,
   updateAir,
   updateBrandAir,
-} from '../controller/airController';
+} from '../controller/air_conditioning/category/airController';
 
 import {
   Heater,
@@ -36,7 +35,7 @@ import {
   createHeater,
   deleteHeater,
   updateHeater,
-} from '../controller/heaterController';
+} from '../controller/air_conditioning/category/heaterController';
 
 import {
   Cooling,
@@ -54,7 +53,7 @@ import {
   updateBrandCooling,
   updateCooling,
   updatemodelCooling,
-} from '../controller/coolingController';
+} from '../controller/air_conditioning/category/coolingController';
 
 const ac = Router();
 

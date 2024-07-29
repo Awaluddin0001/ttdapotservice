@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   conveyanceVendor,
@@ -7,7 +7,7 @@ import {
   createconveyanceVendor,
   deleteconveyanceVendor,
   updateconveyanceVendor,
-} from '../controller/conveyanceVendorController';
+} from '../controller/conveyance/vendor/conveyanceVendorController';
 
 import {
   allconveyanceMaintenance,
@@ -15,7 +15,7 @@ import {
   createMaintenanceconveyance,
   deleteconveyanceMaintenance,
   updateconveyanceMaintenance,
-} from '../controller/conveyanceMaintenanceController';
+} from '../controller/conveyance/maintenance/conveyanceMaintenanceController';
 
 import {
   Conveyance,
@@ -23,7 +23,7 @@ import {
   createConveyance,
   deleteConveyance,
   updateConveyance,
-} from '../controller/conveyanceController';
+} from '../controller/conveyance/category/conveyanceController';
 
 const conveyance = Router();
 

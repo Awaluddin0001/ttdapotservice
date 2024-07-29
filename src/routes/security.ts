@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 import {
   NetworkVendor,
   allNetworkVendor,
   createNetworkVendor,
   deleteNetworkVendor,
   updateNetworkVendor,
-} from '../controller/networkVendorController';
+} from '../controller/network/vendor/networkVendorController';
 
 import {
   NetworkMaintenance,
@@ -14,7 +14,7 @@ import {
   createMaintenanceNetwork,
   deleteNetworkMaintenance,
   updateNetworkMaintenance,
-} from '../controller/networkMaintenanceController';
+} from '../controller/network/maintenance/networkMaintenanceController';
 
 import {
   linkNetwork,
@@ -22,7 +22,7 @@ import {
   createLinkNetwork,
   deleteLinkNetwork,
   updateLinkNetwork,
-} from '../controller/networkLinkController';
+} from '../controller/network/link/networkLinkController';
 
 import {
   allRackserver,
@@ -35,7 +35,7 @@ import {
   deleteBrandRackserver,
   deleteRackserver,
   updateBrandRackserver,
-} from '../controller/rackserverController';
+} from '../controller/network/category/rackserverController';
 
 import {
   allStorage,
@@ -48,7 +48,7 @@ import {
   deleteStorage,
   updateBrandStorage,
   updateStorage,
-} from '../controller/storageController';
+} from '../controller/network/category/storageController';
 
 import {
   allNetworkswitch,
@@ -61,7 +61,7 @@ import {
   deleteNetworkswitch,
   updateBrandNetworkswitch,
   updateNetworkswitch,
-} from '../controller/networkswitchController';
+} from '../controller/network/category/networkswitchController';
 
 import {
   allRouter,
@@ -74,7 +74,7 @@ import {
   deleteRouter,
   updateBrandRouter,
   updateRouter,
-} from '../controller/routerController';
+} from '../controller/network/category/routerController';
 
 import {
   Firewall,
@@ -87,7 +87,7 @@ import {
   deleteFirewall,
   updateBrandFirewall,
   updateFirewall,
-} from '../controller/firewallController';
+} from '../controller/network/category/firewallController';
 
 import {
   Patchpanels,
@@ -100,7 +100,7 @@ import {
   deletePatchpanels,
   updateBrandPatchpanels,
   updatePatchpanels,
-} from '../controller/patchpanelsController';
+} from '../controller/network/category/patchpanelsController';
 
 import {
   Computer,
@@ -108,7 +108,7 @@ import {
   createComputer,
   deleteComputer,
   updateComputer,
-} from '../controller/computerController';
+} from '../controller/network/category/computerController';
 
 const security = Router();
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   buildingfinishesVendor,
@@ -7,7 +7,7 @@ import {
   createbuildingfinishesVendor,
   deletebuildingfinishesVendor,
   updatebuildingfinishesVendor,
-} from '../controller/buildingFinisherVendorController';
+} from '../controller/finishing_building/vendor/buildingFinisherVendorController';
 
 import {
   buildingfinisherMaintenance,
@@ -15,7 +15,7 @@ import {
   createMaintenancebuildingfinisher,
   deletebuildingfinisherMaintenance,
   updatebuildingfinisherMaintenance,
-} from '../controller/buildingFinisherMaintenanceController';
+} from '../controller/finishing_building/maintenance/buildingFinisherMaintenanceController';
 
 import {
   Ceiling,
@@ -23,7 +23,7 @@ import {
   createCeiling,
   deleteCeiling,
   updateCeiling,
-} from '../controller/ceilingController';
+} from '../controller/finishing_building/category/ceilingController';
 
 import {
   Ceramic,
@@ -31,7 +31,7 @@ import {
   createCeramic,
   deleteCeramic,
   updateCeramic,
-} from '../controller/ceramicController';
+} from '../controller/finishing_building/category/ceramicController';
 
 import {
   door,
@@ -39,7 +39,7 @@ import {
   createdoor,
   deletedoor,
   updatedoor,
-} from '../controller/doorController';
+} from '../controller/finishing_building/category/doorController';
 
 import {
   window,
@@ -47,7 +47,7 @@ import {
   createwindow,
   deletewindow,
   updatewindow,
-} from '../controller/windowController';
+} from '../controller/finishing_building/category/windowController';
 
 import {
   wallpaper,
@@ -55,7 +55,7 @@ import {
   createwallpaper,
   deletewallpaper,
   updatewallpaper,
-} from '../controller/wallpaperController';
+} from '../controller/finishing_building/category/wallpaperController';
 
 import {
   mebel,
@@ -63,7 +63,7 @@ import {
   createmebel,
   deletemebel,
   updatemebel,
-} from '../controller/mebelController';
+} from '../controller/finishing_building/category/mebelController';
 
 const building_finishes = Router();
 

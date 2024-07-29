@@ -1,6 +1,9 @@
 import { Router } from 'express';
 
-import { allRoom, allFloor } from '../controller/positionController';
+import {
+  allRoom,
+  allFloor,
+} from '../controller/site/category/positionController';
 
 const position = Router();
 

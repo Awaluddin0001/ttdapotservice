@@ -2,27 +2,11 @@ import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import { Pool } from 'mysql2/promise';
 import moment from 'moment-timezone';
-import { makeIdTable } from './makeIdTable';
 import fs from 'fs';
-import pool from '../config/mySql'; // Import pool langsung
-import { generateImageFileName } from './generateImageFileName';
+import pool from '@/config/mySql'; // Import pool langsung
+import { generateImageFileName } from '@/utils/generateImageFileName';
 import path from 'path';
-
-// Fungsi untuk mendapatkan ID terbaru dan membuat ID baru
-const getNewId = async (
-  pool: Pool,
-  tableName: string,
-  prefix: string,
-  length: number,
-): Promise<string> => {
-  const [rows] = await pool.query<RowDataPacket[]>(
-    `SELECT id FROM ${tableName} ORDER BY id DESC LIMIT 1`,
-  );
-  if (rows.length === 0 || !rows[0]?.id) {
-    return `${prefix}${'0'.repeat(length - 1)}1`;
-  }
-  return makeIdTable(rows[0].id, prefix, length);
-};
+import { getNewId } from './idManipulation';
 
 // Fungsi untuk menjalankan query insert
 const insertRow = async (

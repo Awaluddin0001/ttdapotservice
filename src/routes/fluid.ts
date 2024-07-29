@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   FluidVendor,
@@ -7,7 +7,7 @@ import {
   createFluidVendor,
   deleteFluidVendor,
   updateFluidVendor,
-} from '../controller/fluidVendorController';
+} from '../controller/fluid/vendor/fluidVendorController';
 
 import {
   fluidMaintenance,
@@ -15,7 +15,7 @@ import {
   createMaintenanceFluid,
   deleteFluidMaintenance,
   updateFluidMaintenance,
-} from '../controller/fluidMaintenanceController';
+} from '../controller/fluid/maintenance/fluidMaintenanceController';
 
 import {
   Fluid,
@@ -23,7 +23,7 @@ import {
   createFluid,
   deleteFluid,
   updateFluid,
-} from '../controller/fluidController';
+} from '../controller/fluid/category/fluidController';
 
 const fluid = Router();
 

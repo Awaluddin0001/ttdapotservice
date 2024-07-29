@@ -1,18 +1,18 @@
 // src/index.ts
 import express from 'express';
 import cors from 'cors';
-import ac from './routes/air_conditioning';
-import building_finishes from './routes/building_finishes';
-import conveyance from './routes/conveyance';
-import electrical from './routes/electrical';
-import extinguish from './routes/extinguish';
-import fluid from './routes/fluid';
-import furniture from './routes/furniture';
-import lighting from './routes/lighting';
-import network from './routes/network';
-import safety from './routes/safety';
-import security from './routes/security';
-import position from './routes/position';
+import ac from '@/routes/air_conditioning';
+import building_finishes from '@/routes/building_finishes';
+import conveyance from '@/routes/conveyance';
+import electrical from '@/routes/electrical';
+import extinguish from '@/routes/extinguish';
+import fluid from '@/routes/fluid';
+import furniture from '@/routes/furniture';
+import lighting from '@/routes/lighting';
+import network from '@/routes/network';
+import safety from '@/routes/safety';
+import security from '@/routes/security';
+import position from '@/routes/position';
 
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want

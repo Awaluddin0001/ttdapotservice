@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   extinguishVendor,
@@ -7,7 +7,7 @@ import {
   createextinguishVendor,
   deleteextinguishVendor,
   updateextinguishVendor,
-} from '../controller/extinguishVendorController';
+} from '../controller/extinguish/vendor/extinguishVendorController';
 
 import {
   extinguishMaintenance,
@@ -15,7 +15,7 @@ import {
   createMaintenanceextinguish,
   deleteextinguishMaintenance,
   updateextinguishMaintenance,
-} from '../controller/extinguishMaintenanceController';
+} from '../controller/extinguish/maintenance/extinguishMaintenanceController';
 
 import {
   Pump,
@@ -28,7 +28,7 @@ import {
   deletePump,
   updateBrandpump,
   updatePump,
-} from '../controller/pumpController';
+} from '../controller/pump/category/pumpController';
 
 const extinguish = Router();
 

@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 import {
   FurnitureVendor,
   allFurnitureVendor,
   createFurnitureVendor,
   deleteFurnitureVendor,
   updateFurnitureVendor,
-} from '../controller/furnitureVendorController';
+} from '../controller/furniture/vendor/furnitureVendorController';
 
 import {
   allFurniture,
@@ -14,7 +14,7 @@ import {
   createFurniture,
   deleteFurniture,
   updateFurniture,
-} from '../controller/furnitureController';
+} from '../controller/furniture/category/furnitureController';
 
 const furniture = Router();
 

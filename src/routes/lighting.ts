@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   lightVendor,
@@ -7,7 +7,7 @@ import {
   createLightVendor,
   deleteLightVendor,
   updateLightVendor,
-} from '../controller/lightVendorController';
+} from '../controller/lighting/vendor/lightVendorController';
 
 import {
   lightingMaintenance,
@@ -15,7 +15,7 @@ import {
   createMaintenancelighting,
   deletelightingMaintenance,
   updatelightingMaintenance,
-} from '../controller/lightMaintenanceController';
+} from '../controller/lighting/maintenance/lightMaintenanceController';
 
 import {
   Lighting,
@@ -28,7 +28,7 @@ import {
   deleteLighting,
   updateBrandLighting,
   updateLighting,
-} from '../controller/lightingController';
+} from '../controller/lighting/category/lightingController';
 
 const lighting = Router();
 

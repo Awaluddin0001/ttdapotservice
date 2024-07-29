@@ -2,36 +2,11 @@ import { Request, Response } from 'express';
 import { RowDataPacket } from 'mysql2';
 import { Pool } from 'mysql2/promise';
 import moment from 'moment-timezone';
-import { makeIdTable } from './makeIdTable';
 import fs from 'fs';
-import pool from '../config/mySql';
-import { generateImageFileName } from './generateImageFileName';
+import pool from '@/config/mySql';
+import { generateImageFileName } from '@/utils/generateImageFileName';
 import path from 'path';
-
-// Fungsi untuk mendapatkan ID terbaru dan membuat ID baru
-const getNewId = async (
-  pool: Pool,
-  tableName: string,
-  prefix: string,
-  length: number,
-): Promise<string> => {
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    const [rows] = await connection.query<RowDataPacket[]>(
-      `SELECT id FROM ${tableName} ORDER BY id DESC LIMIT 1`,
-    );
-    if (rows.length === 0 || !rows[0]?.id) {
-      return `${prefix}${'0'.repeat(length - 1)}1`;
-    }
-    return makeIdTable(rows[0].id, prefix, length);
-  } catch (err) {
-    console.error('Failed to fetch data from MySQL:', err);
-    throw err;
-  } finally {
-    if (connection) connection.release();
-  }
-};
+import { getNewId } from '@/utils/idManipulation';
 
 // Fungsi untuk menjalankan query insert
 const insertRow = async (
@@ -80,24 +55,27 @@ export const createRow = async (
     ];
 
     const deviceQuery = `INSERT INTO ${deviceTable} (id, ${deviceColumns.join(', ')}, created_at) VALUES (?, ${deviceColumns.map(() => '?').join(', ')}, ?)`;
-
-    const electricalQuery = `INSERT INTO electrical (id, device_id, ${electricalColumns.map((col) => col).join(', ')}, created_at) VALUES (?, ?, ${electricalColumns.map(() => '?').join(', ')}, ?)`;
+    const electricalQuery = `INSERT INTO electrical (id, device_id, ${electricalColumns.join(', ')}, created_at) VALUES (?, ?, ${electricalColumns.map(() => '?').join(', ')}, ?)`;
 
     await insertRow(pool, deviceQuery, deviceParams);
     await insertRow(pool, electricalQuery, electricalParams);
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      // Pengecekan apakah asset_id sudah ada di electrical_photo
-      const checkExistingQuery =
-        'SELECT * FROM electrical_photo WHERE asset_id = ?';
-      for (let i = 0; i < req.files.length; i++) {
-        const [existingRows] = await connection.query<RowDataPacket[]>(
-          checkExistingQuery,
-          [newElectricalId],
+    const fileFields = ['foto1', 'foto2', 'foto3'] as const;
+    const files = req.files as Record<
+      (typeof fileFields)[number],
+      Express.Multer.File[]
+    >;
+
+    for (const field of fileFields) {
+      if (files[field] && files[field][0]) {
+        const file = files[field][0];
+        const fileIndex = fileFields.indexOf(field) + 1;
+        const newFileName = generateImageFileName(
+          'ELPHO',
+          newDeviceId,
+          fileIndex,
         );
-        const file = req.files[i];
-        const newFileName = generateImageFileName('ELPHO', newDeviceId, i + 1);
         const newPath = path.join(
           __dirname,
           '../../src/images/electrical',
@@ -107,13 +85,20 @@ export const createRow = async (
         fs.renameSync(file.path, newPath);
 
         let photoQuery, photoParams;
+        const checkExistingQuery =
+          'SELECT * FROM electrical_photo WHERE asset_id = ?';
+        const [existingRows] = await connection.query<RowDataPacket[]>(
+          checkExistingQuery,
+          [newElectricalId],
+        );
+
         if (existingRows.length > 0) {
           // Update query
-          photoQuery = `UPDATE electrical_photo SET foto${i + 1} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoQuery = `UPDATE electrical_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
           photoParams = [newFileName, now, req.body.user_id, newElectricalId];
         } else {
           // Insert query
-          photoQuery = `INSERT INTO electrical_photo (asset_id, foto${i + 1}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoQuery = `INSERT INTO electrical_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
           photoParams = [newElectricalId, newFileName, now, req.body.user_id];
         }
 
@@ -257,18 +242,21 @@ export const updateRow = async (
     );
 
     // Menyimpan gambar jika ada
-    // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      // Pengecekan apakah asset_id sudah ada di electrical_photo
-      const checkExistingQuery =
-        'SELECT * FROM electrical_photo WHERE asset_id = ?';
-      for (let i = 0; i < req.files.length; i++) {
-        const [existingRows] = await connection.query<RowDataPacket[]>(
-          checkExistingQuery,
-          [assetid],
+    const fileFields = ['foto1', 'foto2', 'foto3'] as const;
+    const files = req.files as Record<
+      (typeof fileFields)[number],
+      Express.Multer.File[]
+    >;
+
+    for (const field of fileFields) {
+      if (files[field] && files[field][0]) {
+        const file = files[field][0];
+        const fileIndex = fileFields.indexOf(field) + 1;
+        const newFileName = generateImageFileName(
+          'ELPHO',
+          id as string,
+          fileIndex,
         );
-        const file = req.files[i];
-        const newFileName = generateImageFileName('ELPHO', id as string, i + 1);
         const newPath = path.join(
           __dirname,
           '../../src/images/electrical',
@@ -278,13 +266,20 @@ export const updateRow = async (
         fs.renameSync(file.path, newPath);
 
         let photoQuery, photoParams;
+        const checkExistingQuery =
+          'SELECT * FROM electrical_photo WHERE asset_id = ?';
+        const [existingRows] = await connection.query<RowDataPacket[]>(
+          checkExistingQuery,
+          [assetid],
+        );
+
         if (existingRows.length > 0) {
           // Update query
-          photoQuery = `UPDATE electrical_photo SET foto${i + 1} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoQuery = `UPDATE electrical_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
           photoParams = [newFileName, now, req.body.user_id, assetid];
         } else {
           // Insert query
-          photoQuery = `INSERT INTO electrical_photo (asset_id, foto${i + 1}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoQuery = `INSERT INTO electrical_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
           photoParams = [assetid, newFileName, now, req.body.user_id];
         }
 

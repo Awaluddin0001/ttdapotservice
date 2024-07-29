@@ -9,12 +9,15 @@ const deleteImageFiles = async (
   pool: Pool,
   assetId: string,
   folderPath: string,
+  tableName?: string,
 ): Promise<void> => {
-  const [rows] = await pool.query<RowDataPacket[]>(
-    'SELECT foto1, foto2, foto3 FROM electrical_photo WHERE asset_id = ?',
+  const connection = await pool.getConnection();
+  const [rows] = await connection.query<RowDataPacket[]>(
+    `SELECT foto1, foto2, foto3 FROM ${tableName} WHERE asset_id = ?`,
     [assetId],
   );
 
+  connection.release();
   if (rows.length > 0) {
     const images = rows[0];
     for (let i = 1; i <= 3; i++) {
@@ -41,19 +44,20 @@ export const deleteCombinedRow = async (
   query2: string,
   query3: string,
   folderPath: string,
+  tableName?: string,
 ) => {
-  const { id } = req.query;
+  const { id, assetid } = req.query;
   let connection;
   try {
     connection = await pool.getConnection();
 
     // Hapus file gambar terkait
-    await deleteImageFiles(pool, id as string, folderPath);
+    await deleteImageFiles(pool, assetid as string, folderPath, tableName);
 
     // Hapus data dari database
-    await connection.query<RowDataPacket[]>(query1, [id]);
     await connection.query<RowDataPacket[]>(query2, [id]);
-    await connection.query<RowDataPacket[]>(query3, [id]);
+    await connection.query<RowDataPacket[]>(query3, [assetid]);
+    await connection.query<RowDataPacket[]>(query1, [id]);
 
     res.status(200).json({ success: true });
   } catch (error) {
@@ -79,7 +83,12 @@ export const deleteRow = async (
 
     // Hapus file gambar terkait
     if (folderPath && query2) {
-      await deleteImageFiles(pool, id as string, folderPath);
+      await deleteImageFiles(
+        pool,
+        id as string,
+        folderPath,
+        `electrical_photo`,
+      );
       await connection.query<RowDataPacket[]>(query2, [id]);
     }
 

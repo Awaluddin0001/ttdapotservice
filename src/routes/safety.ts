@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { upload } from '../utils/imageUpload';
+import { upload } from '@/utils/imageUpload';
 
 import {
   Safety,
@@ -7,7 +7,7 @@ import {
   createSafety,
   deleteSafety,
   updateSafety,
-} from '../controller/safetyController';
+} from '../controller/safety/category/safetyController';
 
 const safety = Router();
 
