@@ -6,19 +6,14 @@ import {
   createRectifier,
   updateRectifier,
   deleteRectifier,
-  allBrandRecti,
-  brandRectifier,
-  createBrandRectifier,
-  updateBrandRectifier,
-  deleteBrandRectifier,
 } from '@/controller/electrical/category/rectifierController';
 
 import {
-  allElectricalVendor,
   electricalVendor,
   deleteElectricalVendor,
   createElectricalVendor,
   updateElectricalVendor,
+  electricalVendors,
 } from '@/controller/electrical/vendor/electricalVendorController';
 
 import {
@@ -40,14 +35,9 @@ import {
 import {
   allBattery,
   Battery,
-  allBrandBattery,
-  brandBattery,
   createBattery,
-  createBrandBattery,
   deleteBattery,
-  deleteBrandBattery,
   updateBattery,
-  updateBrandBattery,
 } from '@/controller/electrical/category/batteryController';
 
 import {
@@ -64,11 +54,6 @@ import {
   createUps,
   deleteUps,
   updateUps,
-  allBrandUps,
-  brandUps,
-  createBrandUps,
-  deleteBrandUps,
-  updateBrandUps,
 } from '@/controller/electrical/category/upsController';
 
 import {
@@ -82,13 +67,8 @@ import {
 import {
   allGenset,
   Genset,
-  allBrandGenset,
-  brandGenset,
-  createBrandGenset,
   createGenset,
-  deleteBrandGenset,
   deleteGenset,
-  updateBrandGenset,
   updateGenset,
 } from '@/controller/electrical/category/gensetController';
 
@@ -114,28 +94,70 @@ import {
   uploadElectricalImage,
 } from '@/controller/electrical/image/electricalImageUploadController';
 
+import {
+  electricalBrands,
+  electricalBrand,
+  createElectricalBrand,
+  deleteElectricalBrand,
+  updateElectricalBrand,
+} from '@/controller/electrical/brand/electricalBrandController';
+import {
+  createElectricalType,
+  deleteElectricalType,
+  electricalSubCategories,
+  electricalType,
+  electricalTypes,
+  updateElectricalType,
+} from '@/controller/electrical/type/electricalTypeController';
+import { uploadPdf } from '@/utils/pdfUpload';
+
 const electrical = Router();
 
-// vendor rectifier
-electrical.get('/vendors', allElectricalVendor);
+// vendor electrical
+electrical.get('/vendors', electricalVendors);
 electrical.get('/vendor', electricalVendor);
 electrical.post('/vendor', createElectricalVendor);
 electrical.put('/vendor', updateElectricalVendor);
 electrical.delete('/vendor', deleteElectricalVendor);
 
-// maintenance rectifier
+// maintenance electrical
 electrical.get('/maintenances', allElectricalMaintenance);
 electrical.get('/maintenance', electricalMaintenance);
-electrical.post('/maintenance', createMaintenanceElectrical);
-electrical.put('/maintenance', updateElectricalMaintenance);
+electrical.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenanceElectrical,
+);
+electrical.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updateElectricalMaintenance,
+);
 electrical.delete('/maintenance', deleteElectricalMaintenance);
 
-// link rectifier
+// link electrical
 electrical.get('/links', allLinkElectrical);
 electrical.get('/link', linkElectrical);
 electrical.post('/link', createLinkElectrical);
 electrical.put('/link', updateLinkElectrical);
 electrical.delete('/link', deleteLinkElectrical);
+
+// brand electrical
+electrical.get('/brands', electricalBrands);
+electrical.get('/brand', electricalBrand);
+electrical.post('/brand', createElectricalBrand);
+electrical.put('/brand', updateElectricalBrand);
+electrical.delete('/brand', deleteElectricalBrand);
+
+// type electrical
+electrical.get('/types', electricalTypes);
+electrical.get('/type', electricalType);
+electrical.post('/type', createElectricalType);
+electrical.put('/type', updateElectricalType);
+electrical.delete('/type', deleteElectricalType);
+
+// sub category electrical
+electrical.get('/subcategories', electricalSubCategories);
 
 // Rectifier
 electrical.get('/rectifiers', allRectifier);
@@ -152,26 +174,12 @@ electrical.put(
 );
 electrical.delete('/rectifier', deleteRectifier);
 
-// brand rectifier
-electrical.get('/rectifier/brands', allBrandRecti);
-electrical.get('/rectifier/brand', brandRectifier);
-electrical.post('/rectifier/brand', createBrandRectifier);
-electrical.put('/rectifier/brand', updateBrandRectifier);
-electrical.delete('/rectifier/brand', deleteBrandRectifier);
-
 // Battery
 electrical.get('/batteries', allBattery);
 electrical.get('/battery', Battery);
 electrical.post('/battery', upload.array('images', 3), createBattery);
 electrical.put('/battery', upload.array('images', 3), updateBattery);
 electrical.delete('/battery', deleteBattery);
-
-// brand Battery
-electrical.get('/battery/brands', allBrandBattery);
-electrical.get('/battery/brand', brandBattery);
-electrical.post('/battery/brand', createBrandBattery);
-electrical.put('/battery/brand', updateBrandBattery);
-electrical.delete('/battery/brand', deleteBrandBattery);
 
 // panel
 electrical.get('/panels', allPanel);
@@ -181,18 +189,11 @@ electrical.put('/panel', upload.array('images', 3), updatePanel);
 electrical.delete('/panel', deletePanel);
 
 // ups
-electrical.get('/upsies', allUps);
+electrical.get('/upses', allUps);
 electrical.get('/ups', Ups);
 electrical.post('/ups', upload.array('images', 3), createUps);
 electrical.put('/ups', upload.array('images', 3), updateUps);
 electrical.delete('/ups', deleteUps);
-
-// brand ups
-electrical.get('/ups/brands', allBrandUps);
-electrical.get('/ups/brand', brandUps);
-electrical.post('/ups/brand', upload.array('images', 3), createBrandUps);
-electrical.put('/ups/brand', upload.array('images', 3), updateBrandUps);
-electrical.delete('/ups/brand', deleteBrandUps);
 
 // trafo
 electrical.get('/trafos', allTrafo);
@@ -208,13 +209,6 @@ electrical.post('/genset', upload.array('images', 3), createGenset);
 electrical.put('/genset', upload.array('images', 3), updateGenset);
 electrical.delete('/genset', deleteGenset);
 
-// brand genset
-electrical.get('/genset/brands', allBrandGenset);
-electrical.get('/genset/brand', brandGenset);
-electrical.post('/genset/brand', createBrandGenset);
-electrical.put('/genset/brand', updateBrandGenset);
-electrical.delete('/genset/brand', deleteBrandGenset);
-
 // lvmdp
 electrical.get('/lvmdps', allLvmdp);
 electrical.get('/lvmdp', Lvmdp);
@@ -229,8 +223,9 @@ electrical.post('/cubicle', upload.array('images', 3), createCubicle);
 electrical.put('/cubicle', upload.array('images', 3), updateCubicle);
 electrical.delete('/cubicle', deleteCubicle);
 
-electrical.post('/images', upload.array('images', 3), uploadElectricalImage);
+// images
 electrical.get('/images', getElectricalImagesByAssetId);
+electrical.post('/images', upload.array('images', 3), uploadElectricalImage);
 electrical.put('/images', upload.array('images', 3), updateElectricalImages);
 
 export default electrical;

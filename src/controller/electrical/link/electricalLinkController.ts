@@ -1,21 +1,29 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allLinkElectrical = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM electrical_link`,
-    `electrical_link`,
+    `SELECT cas.*, u.name as user_name FROM electrical_link as cas`,
   );
 };
 
 export const linkElectrical = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM electrical_link WHERE id = ?`);
+  await getBigDeviceRow(
+    req,
+    res,
+    pool,
+    `SELECT * FROM electrical_link WHERE id = ?`,
+  );
 };
 
 export const deleteLinkElectrical = async (req: Request, res: Response) => {

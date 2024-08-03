@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 import {
@@ -10,7 +14,7 @@ import {
 } from '@/utils/CreatePutDataLighting';
 
 export const allLighting = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -32,12 +36,11 @@ export const allLighting = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_lighting m ON r.maintenance_id = m.id
     LEFT JOIN lighting el ON r.id = el.device_id
     LEFT JOIN lighting_photo ep ON el.id = ep.asset_id`,
-    `lighting_device`,
   );
 };
 
 export const Lighting = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -138,32 +141,4 @@ export const deleteLighting = async (req: Request, res: Response) => {
     `DELETE FROM lighting_photo WHERE asset_id = ?`,
     `lighting`,
   );
-};
-
-export const allBrandLighting = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM lighting_brand`,
-    `lighting_brand`,
-  );
-};
-
-export const brandLighting = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM ligting_brand WHERE id = ?`);
-};
-
-export const createBrandLighting = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'lighting_brand', 'LIBRA', columns);
-};
-
-export const updateBrandLighting = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'lighting_brand', columns);
-};
-
-export const deleteBrandLighting = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM lighting_brand WHERE id = ?`);
 };

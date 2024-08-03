@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataSecurity';
 
 export const allCctv = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -31,12 +35,11 @@ export const allCctv = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
     LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
-    `cctv`,
   );
 };
 
 export const Cctv = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -131,26 +134,4 @@ export const deleteCctv = async (req: Request, res: Response) => {
     `DELETE FROM security_photo WHERE asset_id = ?`,
     `security`,
   );
-};
-
-export const allBrandCctv = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM cctv_brand`, `cctv_brand`);
-};
-
-export const brandCctv = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM cctv_brand WHERE id = ?`);
-};
-
-export const createBrandCctv = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'cctv_brand', 'SECBR', columns);
-};
-
-export const updateBrandCctv = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'cctv_brand', columns);
-};
-
-export const deleteBrandCctv = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM cctv_brand WHERE id = ?`);
 };

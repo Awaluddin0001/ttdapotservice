@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowNetwork,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataNetwork';
 
 export const allFirewall = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -33,12 +37,11 @@ export const allFirewall = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `firewalls`,
   );
 };
 
 export const Firewall = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -151,32 +154,4 @@ export const deleteFirewall = async (req: Request, res: Response) => {
     `DELETE FROM network_photo WHERE asset_id = ?`,
     `network`,
   );
-};
-
-export const allBrandFirewall = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM firewalls_brand`,
-    `firewalls_brand`,
-  );
-};
-
-export const brandFirewall = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM firewalls_brand WHERE id = ?`);
-};
-
-export const createBrandFirewall = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'firewalls_brand', 'NIFBR', columns);
-};
-
-export const updateBrandFirewall = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'firewalls_brand', columns);
-};
-
-export const deleteBrandFirewall = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM firewalls_brand WHERE id = ?`);
 };

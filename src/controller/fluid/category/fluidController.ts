@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createRowFluid, updateRowFluid } from '@/utils/CreatePutDataFluid';
 
 export const allFluid = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -25,12 +29,11 @@ export const allFluid = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_fluid m ON t.maintenance_id = m.id
     LEFT JOIN fluid el ON t.id = el.tank_id
     LEFT JOIN fluid_photo ep ON el.id = ep.asset_id`,
-    `tank_type`,
   );
 };
 
 export const Fluid = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

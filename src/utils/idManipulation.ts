@@ -64,58 +64,196 @@ export const queryPage = (req: Request) => {
 };
 
 export const queryBigDevice = (
-  newColumns?: string[] | null,
-  categoryname: string,
-  subCategoryname: string,
+  categoryName: string,
+  subCategoryName: string,
+  newColumnsCas: string[],
+  newJoin?: string[] | null,
 ) => {
+  if (newJoin) {
+    return `SELECT 
+    cas.id, 
+    cas.vendor_id,
+    DATE_FORMAT(cas.created_at, "%Y-%m-%d") AS created_at,
+    cas.user_id,
+    ca.id as asset_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    ca.sub_category_id as sub_category_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    v.company AS vendor_name, 
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCas.join(', ')}
+  FROM ${subCategoryName} cas
+  LEFT JOIN ${categoryName} ca ON cas.id = ca.device_id
+  LEFT JOIN ${categoryName}_vendor v ON cas.vendor_id = v.id
+  LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+  LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+  LEFT JOIN user u ON ca.user_id = u.id
+  LEFT JOIN room rm ON ca.room_id = rm.id
+  LEFT JOIN floor fl ON ca.floor_id = fl.id
+  LEFT JOIN site st ON ca.site_id = st.id
+  ${newJoin.join(' ')}
+  WHERE 1=1`;
+  }
+
   return `SELECT 
-        cas.id, 
-        cas.vendor_id,
-        cas.brand_id,
-        cas.name,
-        cas.role,
-        cas.type,
-        cas.capacity,
-        cas.modul,
-        cas.capacity_modul,
-        cas.load_current,
-        cas.occupancy,
-        cas.system_device,
-        cas.remark_aging,
-        cas.warranty,
-        DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
-        DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
-        DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-        b.name AS brand_name, 
-        v.company AS vendor_name, 
-        u.name AS user_name,
-        ep.foto1 AS photo1,
-        ep.foto2 AS photo2,
-        ep.foto3 AS photo3,
-        el.id as asset_id,
-        el.ne_id as ne_id,
-        el.site_id as site_id,
-        el.floor_id as floor_id,
-        el.room_id as room_id,
-        el.link_id as link_id,
-        el.status as status,
-        el.condition_asset,
-        el.notes as notes,
-        rm.name as room_name,
-        fl.name as floor_name,
-        st.name as site_name,
-        lk.incoming as incoming,
-        lk.outgoing as outgoing
-      FROM ${subCategoryname} cas
-      LEFT JOIN ${categoryname} ca ON r.id = el.device_id
-      LEFT JOIN rectifier_brand b ON r.brand_id = b.id
-      LEFT JOIN electrical_vendor v ON r.vendor_id = v.id
-      LEFT JOIN user u ON r.user_id = u.id
-      LEFT JOIN maintenance_electrical m ON r.maintenance_id = m.id
-      LEFT JOIN electrical_photo ep ON el.id = ep.asset_id
-      LEFT JOIN room rm ON el.room_id = rm.id
-      LEFT JOIN floor fl ON el.floor_id = fl.id
-      LEFT JOIN site st ON el.site_id = st.id
-      LEFT JOIN electrical_link lk ON el.link_id = lk.id
-      WHERE 1=1`;
+    cas.id, 
+    cas.vendor_id,
+    DATE_FORMAT(cas.created_at, "%Y-%m-%d") AS created_at,
+    cas.user_id,
+    ca.id as asset_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    ca.sub_category_id as sub_category_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    v.company AS vendor_name, 
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCas.join(', ')}
+  FROM ${subCategoryName} cas
+  LEFT JOIN ${categoryName} ca ON cas.id = ca.device_id
+  LEFT JOIN ${categoryName}_vendor v ON cas.vendor_id = v.id
+  LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+  LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+  LEFT JOIN user u ON ca.user_id = u.id
+  LEFT JOIN room rm ON ca.room_id = rm.id
+  LEFT JOIN floor fl ON ca.floor_id = fl.id
+  LEFT JOIN site st ON ca.site_id = st.id
+  WHERE 1=1`;
+};
+
+export const queryBigAsset = (categoryName: string, newColumnsCa: string[]) => {
+  return `SELECT 
+    ca.id as asset_id,
+    DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
+    ca.user_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    ca.sub_category_id as sub_category_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    suca.name as sub_category_name,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    v.company AS vendor_name, 
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCa.join(', ')}
+  FROM ${categoryName} ca
+  LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+  LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+  LEFT JOIN ${categoryName}_sub_category suca ON ca.sub_category_id = suca.id
+  LEFT JOIN user u ON ca.user_id = u.id
+  LEFT JOIN room rm ON ca.room_id = rm.id
+  LEFT JOIN floor fl ON ca.floor_id = fl.id
+  LEFT JOIN site st ON ca.site_id = st.id
+  WHERE 1=1`;
+};
+
+export const globalFilterDevice = (
+  req: Request,
+  columnFilter?: string[] | null,
+) => {
+  const { globalFilter } = req.query;
+  if (columnFilter) {
+    const query = `
+    AND (
+            cas.id LIKE '%${globalFilter}%' 
+            OR cas.vendor_id LIKE '%${globalFilter}%'
+            OR cas.user_id LIKE '%${globalFilter}%'
+            OR ca.id LIKE '%${globalFilter}%'
+            OR ca.site_id LIKE '%${globalFilter}%'
+            OR ca.floor_id LIKE '%${globalFilter}%'
+            OR ca.room_id LIKE '%${globalFilter}%'
+            OR ca.sub_category_id LIKE '%${globalFilter}%' 
+            OR rm.name LIKE '%${globalFilter}%'
+            OR v.company LIKE '%${globalFilter}%',
+            OR u.name LIKE '%${globalFilter}%'
+            OR v.company LIKE '%${globalFilter}%'
+            OR u.name LIKE '%${globalFilter}%'
+          )
+    `;
+    let queryFilter = +columnFilter.map((filter) => `OR ${filter}`).join(' ');
+    return query + queryFilter;
+  }
+  return `
+  AND (
+          cas.id LIKE '%${globalFilter}%' 
+          OR cas.vendor_id LIKE '%${globalFilter}%'
+          OR cas.user_id LIKE '%${globalFilter}%'
+          OR ca.id LIKE '%${globalFilter}%'
+          OR ca.site_id LIKE '%${globalFilter}%'
+          OR ca.floor_id LIKE '%${globalFilter}%'
+          OR ca.room_id LIKE '%${globalFilter}%'
+          OR ca.sub_category_id LIKE '%${globalFilter}%' 
+          OR rm.name LIKE '%${globalFilter}%'
+          OR v.company LIKE '%${globalFilter}%',
+          OR u.name LIKE '%${globalFilter}%'
+          OR v.company LIKE '%${globalFilter}%'
+          OR u.name LIKE '%${globalFilter}%'
+        )
+  `;
+};
+export const globalFilterAsset = (
+  req: Request,
+  columnFilter?: string[] | null,
+) => {
+  const { globalFilter } = req.query;
+  if (columnFilter) {
+    const query = `
+    AND (
+            ca.id LIKE '%${globalFilter}%'
+            OR ca.site_id LIKE '%${globalFilter}%'
+            OR ca.floor_id LIKE '%${globalFilter}%'
+            OR ca.room_id LIKE '%${globalFilter}%'
+            OR ca.sub_category_id LIKE '%${globalFilter}%' 
+            OR rm.name LIKE '%${globalFilter}%'
+            OR v.company LIKE '%${globalFilter}%',
+            OR u.name LIKE '%${globalFilter}%'
+            OR v.company LIKE '%${globalFilter}%'
+            OR u.name LIKE '%${globalFilter}%'
+          )
+    `;
+    let queryFilter = +columnFilter.map((filter) => `OR ${filter}`).join(' ');
+    return query + queryFilter;
+  }
+  return `
+  AND (
+          ca.id LIKE '%${globalFilter}%'
+          OR ca.site_id LIKE '%${globalFilter}%'
+          OR ca.floor_id LIKE '%${globalFilter}%'
+          OR ca.room_id LIKE '%${globalFilter}%'
+          OR ca.sub_category_id LIKE '%${globalFilter}%' 
+          OR rm.name LIKE '%${globalFilter}%'
+          OR v.company LIKE '%${globalFilter}%',
+          OR u.name LIKE '%${globalFilter}%'
+          OR v.company LIKE '%${globalFilter}%'
+          OR u.name LIKE '%${globalFilter}%'
+        )
+  `;
 };

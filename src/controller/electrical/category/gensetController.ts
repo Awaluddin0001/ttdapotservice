@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import {
   createEntity,
   createRow,
@@ -10,7 +14,7 @@ import {
 } from '@/utils/CreatePutDataElectrical';
 
 export const allGenset = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -32,12 +36,11 @@ export const allGenset = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_electrical m ON g.maintenance_id = m.id
     LEFT JOIN electrical el ON g.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
-    `genset`,
   );
 };
 
 export const Genset = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -139,26 +142,4 @@ export const deleteGenset = async (req: Request, res: Response) => {
     `DELETE FROM electrical_photo WHERE asset_id = ?`,
     `electrical`,
   );
-};
-
-export const allBrandGenset = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM genset_brand`, `genset_brand`);
-};
-
-export const brandGenset = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM genset_brand WHERE id = ?`);
-};
-
-export const createBrandGenset = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'genset_brand', 'ELGBR', columns);
-};
-
-export const updateBrandGenset = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'genset_brand', columns);
-};
-
-export const deleteBrandGenset = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM genset_brand WHERE id = ?`);
 };

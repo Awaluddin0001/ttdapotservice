@@ -4,7 +4,10 @@ import { Pool } from 'mysql2/promise';
 import moment from 'moment-timezone';
 import fs from 'fs';
 import pool from '@/config/mySql';
-import { generateImageFileName } from '@/utils/generateImageFileName';
+import {
+  generateDocumentFileName,
+  generateImageFileName,
+} from '@/utils/generateImageFileName';
 import path from 'path';
 import { getNewId } from '@/utils/idManipulation';
 
@@ -179,6 +182,59 @@ export const createEntity = async (
   }
 };
 
+export const createEntityDocument = async (
+  req: Request,
+  res: Response,
+  tableName: string,
+  prefix: string,
+  columns: string[],
+  folderPath?: string,
+) => {
+  const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+    const newId = await getNewId(pool, tableName, prefix, 3);
+    console.log(req.body);
+    const newFileName = generateDocumentFileName(`${prefix}`, newId, 1);
+    const params = [
+      newId,
+      ...columns.map((col) => req.body[col] || null),
+      newFileName,
+      now,
+      req.body.user_id,
+    ];
+
+    await insertRow(
+      pool,
+      `INSERT INTO ${tableName} (id, ${columns.join(', ')}, document_name,maintenance_date, user_id) VALUES (?, ${columns.map(() => '?').join(', ')}, ?,?, ?)`,
+      params,
+    );
+
+    // Menyimpan dokumen jika ada
+    if (folderPath) {
+      const file = req.file; // Get the uploaded file
+      if (file) {
+        const newPath = path.join(
+          __dirname,
+          `../../src/documents/maintenance/${folderPath}`,
+          newFileName,
+        );
+
+        fs.renameSync(file.path, newPath);
+      }
+    }
+
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error(`Error creating entity in ${tableName}:`, error);
+    res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 const updateARow = async (
   pool: Pool,
   query: string,
@@ -210,6 +266,7 @@ export const updateRow = async (
 
   try {
     connection = await pool.getConnection();
+    console.log(req.body.type_id);
     const deviceParams = [
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
@@ -317,6 +374,7 @@ export const updateEntity = async (
       req.body.user_id,
       id,
     ];
+    console.log(params);
 
     await updateARow(
       pool,
@@ -350,6 +408,86 @@ export const updateEntity = async (
           const photoParams = [newFileName, now, id];
 
           await updateARow(pool, photoQuery, photoParams);
+        }
+      }
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(`Error updating entity in ${tableName}:`, error);
+    res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
+  }
+};
+export const updateEntityDocument = async (
+  req: Request,
+  res: Response,
+  tableName: string,
+  columns: string[],
+  folderPath?: string,
+  prefixDocument?: string,
+  tableDocument?: string,
+) => {
+  const { id } = req.query;
+  const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  let connection;
+
+  try {
+    connection = await pool.getConnection();
+    const newFileName = generateDocumentFileName(
+      `${prefixDocument}`,
+      id as string,
+      1,
+    );
+    let params;
+
+    console.log(req.body.document_name);
+
+    if (req.body.document_name === 'null') {
+      params = [req.body.activity, now, req.body.user_id, id];
+      await updateARow(
+        pool,
+        `UPDATE ${tableName} SET
+            activity = ?,
+            maintenance_date = ?,
+            user_id = ?
+          WHERE id = ?`,
+        params,
+      );
+    } else {
+      params = [
+        ...columns.map((col) => req.body[col] || null),
+        newFileName,
+        now,
+        req.body.user_id,
+        id,
+      ];
+      await updateARow(
+        pool,
+        `UPDATE ${tableName} SET
+            ${columns.map((col) => `${col} = ?`).join(', ')},
+            document_name = ?,
+            maintenance_date = ?,
+            user_id = ?
+          WHERE id = ?`,
+        params,
+      );
+    }
+
+    // Menyimpan gambar jika ada
+    // Menyimpan dokumen jika ada
+    if (folderPath) {
+      if (req.file) {
+        const file = req.file; // Get the uploaded file
+        if (file) {
+          const newPath = path.join(
+            __dirname,
+            `../../src/documents/maintenance/${folderPath}`,
+            newFileName,
+          );
+
+          fs.renameSync(file.path, newPath);
         }
       }
     }

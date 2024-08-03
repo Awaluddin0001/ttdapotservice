@@ -1,15 +1,19 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allFurniture = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM furniture`, `furniture`);
+  await getRowQuery(req, res, pool, `SELECT * FROM furniture`);
 };
 
 export const Furniture = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM furniture WHERE id = ?`);
+  await getBigDeviceRow(req, res, pool, `SELECT * FROM furniture WHERE id = ?`);
 };
 
 export const deleteFurniture = async (req: Request, res: Response) => {

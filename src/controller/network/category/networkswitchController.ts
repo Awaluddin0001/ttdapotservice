@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowNetwork,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataNetwork';
 
 export const allNetworkswitch = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -33,12 +37,11 @@ export const allNetworkswitch = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `network_switches`,
   );
 };
 
 export const Networkswitch = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -150,43 +153,5 @@ export const deleteNetworkswitch = async (req: Request, res: Response) => {
     `DELETE FROM network_switches WHERE id = ?`,
     `DELETE FROM network_photo WHERE asset_id = ?`,
     `network`,
-  );
-};
-
-export const allBrandNetworkswitch = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM network_switches_brand`,
-    `network_switches_brand`,
-  );
-};
-
-export const brandNetworkswitch = async (req: Request, res: Response) => {
-  await getOneRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM network_switches_brand WHERE id = ?`,
-  );
-};
-
-export const createBrandNetworkswitch = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'network_switches_brand', 'NINSB', columns);
-};
-
-export const updateBrandNetworkswitch = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'network_switches_brand', columns);
-};
-
-export const deleteBrandNetworkswitch = async (req: Request, res: Response) => {
-  await deleteRow(
-    req,
-    res,
-    pool,
-    `DELETE FROM network_switches_brand WHERE id = ?`,
   );
 };

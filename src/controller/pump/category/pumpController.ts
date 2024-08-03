@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import { createRowPump, updateRowPump } from '@/utils/CreatePutDataPump';
 
 export const allPump = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -28,12 +32,11 @@ export const allPump = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_pump m ON r.maintenance_id = m.id
         LEFT JOIN pump el ON r.id = el.device_id
     LEFT JOIN pump_photo ep ON el.id = ep.asset_id`,
-    `pump_device`,
   );
 };
 
 export const Pump = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -132,26 +135,4 @@ export const deletePump = async (req: Request, res: Response) => {
     `DELETE FROM pump_photo WHERE asset_id = ?`,
     `pump`,
   );
-};
-
-export const allBrandpump = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM pump_brand`, `pump_brand`);
-};
-
-export const brandpump = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM pump_brand WHERE id = ?`);
-};
-
-export const createBrandpump = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'pump_brand', 'ELRBR', columns);
-};
-
-export const updateBrandpump = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'pump_brand', columns);
-};
-
-export const deleteBrandpump = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM pump_brand WHERE id = ?`);
 };

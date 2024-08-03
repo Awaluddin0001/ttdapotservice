@@ -4,7 +4,11 @@ import { format } from 'date-fns';
 import { RowDataPacket } from 'mysql2'; // Import RowDataPacket type
 import moment from 'moment-timezone';
 import { makeIdTable } from '@/utils/idManipulation';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import {
   createEntity,
   createRow,
@@ -14,7 +18,7 @@ import {
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
 
 export const allBattery = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -36,11 +40,10 @@ export const allBattery = async (req: Request, res: Response) => {
           LEFT JOIN maintenance_electrical m ON ba.maintenance_id = m.id
           LEFT JOIN electrical el ON ba.id = el.device_id
           LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
-    `battery`,
   );
 };
 export const Battery = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -145,32 +148,4 @@ export const deleteBattery = async (req: Request, res: Response) => {
     `DELETE FROM electrical_photo WHERE asset_id = ?`,
     `electrical`,
   );
-};
-
-export const allBrandBattery = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM battery_brand`,
-    `battery_brand`,
-  );
-};
-
-export const brandBattery = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM battery_brand WHERE id = ?`);
-};
-
-export const createBrandBattery = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'battery_brand', 'ELBBR', columns);
-};
-
-export const updateBrandBattery = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'battery_brand', columns);
-};
-
-export const deleteBrandBattery = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM battery_brand WHERE id = ?`);
 };

@@ -19,14 +19,9 @@ import {
 
 import {
   Lighting,
-  allBrandLighting,
   allLighting,
-  brandLighting,
-  createBrandLighting,
   createLighting,
-  deleteBrandLighting,
   deleteLighting,
-  updateBrandLighting,
   updateLighting,
 } from '../controller/lighting/category/lightingController';
 
@@ -52,12 +47,5 @@ lighting.get('/lighting', Lighting);
 lighting.post('/lighting', upload.array('images', 3), createLighting);
 lighting.put('/lighting', upload.array('images', 3), updateLighting);
 lighting.delete('/lighting', deleteLighting);
-
-// lighting brand
-lighting.get('/lighting/brands', allBrandLighting);
-lighting.get('/lighting/brand', brandLighting);
-lighting.post('/lighting/brand', createBrandLighting);
-lighting.put('/lighting/brand', updateBrandLighting);
-lighting.delete('/lighting/brand', deleteBrandLighting);
 
 export default lighting;

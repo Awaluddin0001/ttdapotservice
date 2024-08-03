@@ -1,21 +1,15 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import { getRowQuery } from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allairconditioningVendor = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM air_conditioning_vendor`,
-    `air_conditioning_vendor`,
-  );
+  await getRowQuery(req, res, pool, `SELECT * FROM air_conditioning_vendor`);
 };
 
 export const airconditioningVendor = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getRowQuery(
     req,
     res,
     pool,

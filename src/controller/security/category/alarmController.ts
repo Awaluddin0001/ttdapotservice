@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataSecurity';
 
 export const allAlarm = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -31,12 +35,11 @@ export const allAlarm = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
     LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
-    `alarm`,
   );
 };
 
 export const Alarm = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -115,26 +118,4 @@ export const deleteAlarm = async (req: Request, res: Response) => {
     `DELETE FROM security_photo WHERE asset_id = ?`,
     `security`,
   );
-};
-
-export const allBrandAlarm = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM alarm_brand`, `alarm_brand`);
-};
-
-export const brandAlarm = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM alarm_brand WHERE id = ?`);
-};
-
-export const createBrandAlarm = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'alarm_brand', 'SEABR', columns);
-};
-
-export const updateBrandAlarm = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'alarm_brand', columns);
-};
-
-export const deleteBrandAlarm = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM alarm_brand WHERE id = ?`);
 };

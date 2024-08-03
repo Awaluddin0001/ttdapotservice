@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createRow, updateRow } from '@/utils/CreatePutDataElectrical';
 
 export const allLvmdp = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -25,12 +29,11 @@ export const allLvmdp = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_electrical m ON p.maintenance_id = m.id
     LEFT JOIN electrical el ON p.id = el.device_id
     LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
-    `pdu`,
   );
 };
 
 export const Lvmdp = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

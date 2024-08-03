@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowSecurity,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataSecurity';
 
 export const allVideoRecording = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -31,12 +35,11 @@ export const allVideoRecording = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_security m ON r.maintenance_id = m.id
     LEFT JOIN security el ON r.id = el.device_id
     LEFT JOIN security_photo ep ON el.id = ep.asset_id`,
-    `video_recording`,
   );
 };
 
 export const VideoRecording = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -134,52 +137,5 @@ export const deleteVideoRecording = async (req: Request, res: Response) => {
     `DELETE FROM access_control WHERE id = ?`,
     `DELETE FROM security_photo WHERE asset_id = ?`,
     `security`,
-  );
-};
-
-export const allBrandVideoRecording = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM video_recording_brand`,
-    `video_recording_brand`,
-  );
-};
-
-export const brandVideoRecording = async (req: Request, res: Response) => {
-  await getOneRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM video_recording_brand WHERE id = ?`,
-  );
-};
-
-export const createBrandVideoRecording = async (
-  req: Request,
-  res: Response,
-) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'video_recording_brand', 'SECVR', columns);
-};
-
-export const updateBrandVideoRecording = async (
-  req: Request,
-  res: Response,
-) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'video_recording_brand', columns);
-};
-
-export const deleteBrandVideoRecording = async (
-  req: Request,
-  res: Response,
-) => {
-  await deleteRow(
-    req,
-    res,
-    pool,
-    `DELETE FROM video_recording_brand WHERE id = ?`,
   );
 };

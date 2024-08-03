@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 
 import {
   createRowBuildingFinish,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataBuildingFinisher';
 
 export const allwallpaper = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -29,12 +33,11 @@ export const allwallpaper = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_building_finisher m ON t.maintenance_id = m.id
     LEFT JOIN building_finishes el ON t.id = el.category_id
     LEFT JOIN building_finishes_photo ep ON el.id = ep.asset_id`,
-    `wallpaper`,
   );
 };
 
 export const wallpaper = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

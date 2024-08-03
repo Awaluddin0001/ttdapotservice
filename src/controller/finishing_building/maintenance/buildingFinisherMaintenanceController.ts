@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
@@ -8,12 +12,11 @@ export const allbuildingfinisherMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
     `SELECT * FROM maintenance_building_finisher`,
-    `maintenance_building_finisher`,
   );
 };
 
@@ -21,7 +24,7 @@ export const buildingfinisherMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowNetwork,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataNetwork';
 
 export const allRackserver = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -31,12 +35,11 @@ export const allRackserver = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `rack_server`,
   );
 };
 
 export const Rackserver = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -147,37 +150,4 @@ export const deleteRackserver = async (req: Request, res: Response) => {
     `DELETE FROM network_photo WHERE asset_id = ?`,
     `network`,
   );
-};
-
-export const allBrandRackserver = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM rack_server_brand`,
-    `rack_server_brand`,
-  );
-};
-
-export const brandRackserver = async (req: Request, res: Response) => {
-  await getOneRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM rack_server_brand WHERE id = ?`,
-  );
-};
-
-export const createBrandRackserver = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'rack_server_brand', 'NIRSB', columns);
-};
-
-export const updateBrandRackserver = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'rack_server_brand', columns);
-};
-
-export const deleteBrandRackserver = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM rack_server_brand WHERE id = ?`);
 };

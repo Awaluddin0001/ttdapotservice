@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowNetwork,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataNetwork';
 
 export const allStorage = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -33,12 +37,11 @@ export const allStorage = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `storage`,
   );
 };
 
 export const Storage = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -145,32 +148,4 @@ export const deleteStorage = async (req: Request, res: Response) => {
     `DELETE FROM network_photo WHERE asset_id = ?`,
     `network`,
   );
-};
-
-export const allBrandStorage = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM storage_brand`,
-    `storage_brand`,
-  );
-};
-
-export const brandStorage = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM storage_brand WHERE id = ?`);
-};
-
-export const createBrandStorage = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'storage_brand', 'NISRB', columns);
-};
-
-export const updateBrandStorage = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'storage_brand', columns);
-};
-
-export const deleteBrandStorage = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM storage_brand WHERE id = ?`);
 };

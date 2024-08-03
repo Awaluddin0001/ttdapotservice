@@ -1,14 +1,18 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import {
   createRowNetwork,
   updateRowNetwork,
 } from '@/utils/CreatePutDataNetwork';
 
 export const allComputer = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -28,12 +32,11 @@ export const allComputer = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON t.maintenance_id = m.id
     LEFT JOIN network_it el ON t.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `computer`,
   );
 };
 
 export const Computer = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

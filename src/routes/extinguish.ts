@@ -19,14 +19,9 @@ import {
 
 import {
   Pump,
-  allBrandpump,
   allPump,
-  brandpump,
-  createBrandpump,
   createPump,
-  deleteBrandpump,
   deletePump,
-  updateBrandpump,
   updatePump,
 } from '../controller/pump/category/pumpController';
 
@@ -52,12 +47,5 @@ extinguish.get('/pump', Pump);
 extinguish.post('/pump', upload.array('images', 3), createPump);
 extinguish.put('/pump', upload.array('images', 3), updatePump);
 extinguish.delete('/pump', deletePump);
-
-// pump brand
-extinguish.get('/pump/brands', allBrandpump);
-extinguish.get('/pump/brand', brandpump);
-extinguish.post('/pump/brand', createBrandpump);
-extinguish.put('/pump/brand', updateBrandpump);
-extinguish.delete('/pump/brand', deleteBrandpump);
 
 export default extinguish;

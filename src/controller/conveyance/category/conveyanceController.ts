@@ -1,14 +1,18 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import {
   createRowConveyance,
   updateRowConveyance,
 } from '@/utils/CreatePutDataConveyance';
 
 export const allConveyance = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -28,12 +32,11 @@ export const allConveyance = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_conveyance m ON t.maintenance_id = m.id
     LEFT JOIN conveyance el ON t.id = el.type_id
     LEFT JOIN conveyance_photo ep ON el.id = ep.asset_id`,
-    `conveyance_type`,
   );
 };
 
 export const Conveyance = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,

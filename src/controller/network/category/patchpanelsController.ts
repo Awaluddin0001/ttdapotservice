@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 import {
   createRowNetwork,
@@ -9,7 +13,7 @@ import {
 } from '@/utils/CreatePutDataNetwork';
 
 export const allPatchpanels = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -33,12 +37,11 @@ export const allPatchpanels = async (req: Request, res: Response) => {
     LEFT JOIN maintenance_network m ON r.maintenance_id = m.id
     LEFT JOIN network_it el ON r.id = el.device_id
     LEFT JOIN network_photo ep ON el.id = ep.asset_id`,
-    `patch_panels`,
   );
 };
 
 export const Patchpanels = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -150,43 +153,5 @@ export const deletePatchpanels = async (req: Request, res: Response) => {
     `DELETE FROM patch_panels WHERE id = ?`,
     `DELETE FROM network_photo WHERE asset_id = ?`,
     `network`,
-  );
-};
-
-export const allBrandPatchpanels = async (req: Request, res: Response) => {
-  await getAllRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM patch_panels_brand`,
-    `patch_panels_brand`,
-  );
-};
-
-export const brandPatchpanels = async (req: Request, res: Response) => {
-  await getOneRow(
-    req,
-    res,
-    pool,
-    `SELECT * FROM patch_panels_brand WHERE id = ?`,
-  );
-};
-
-export const createBrandPatchpanels = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'patch_panels_brand', 'NIPPB', columns);
-};
-
-export const updateBrandPatchpanels = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'patch_panels_brand', columns);
-};
-
-export const deleteBrandPatchpanels = async (req: Request, res: Response) => {
-  await deleteRow(
-    req,
-    res,
-    pool,
-    `DELETE FROM patch_panels_brand WHERE id = ?`,
   );
 };

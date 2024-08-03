@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getAllRow, getOneRow } from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { getRowQuery } from '@/utils/getData';
 
 export const allRoom = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM room`, `room`);
+  await getRowQuery(req, res, pool, `SELECT * FROM room`, true);
 };
 export const allFloor = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM floor`, `floor`);
+  await getRowQuery(req, res, pool, `SELECT * FROM floor`, true);
 };

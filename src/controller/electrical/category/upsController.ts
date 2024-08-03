@@ -4,7 +4,11 @@ import { format } from 'date-fns';
 import { RowDataPacket } from 'mysql2'; // Import RowDataPacket type
 import moment from 'moment-timezone';
 import { makeIdTable } from '@/utils/idManipulation';
-import { getAllRow, getOneRow } from '@/utils/getData';
+import {
+  getBigDeviceRows,
+  getBigDeviceRow,
+  getRowQuery,
+} from '@/utils/getData';
 import {
   createEntity,
   createRow,
@@ -14,7 +18,7 @@ import {
 import { deleteCombinedRow, deleteRow } from '@/utils/deleteData';
 
 export const allUps = async (req: Request, res: Response) => {
-  await getAllRow(
+  await getRowQuery(
     req,
     res,
     pool,
@@ -36,11 +40,10 @@ export const allUps = async (req: Request, res: Response) => {
           LEFT JOIN maintenance_electrical m ON up.maintenance_id = m.id
           LEFT JOIN electrical el ON up.id = el.device_id
           LEFT JOIN electrical_photo ep ON el.id = ep.asset_id`,
-    `ups`,
   );
 };
 export const Ups = async (req: Request, res: Response) => {
-  await getOneRow(
+  await getBigDeviceRow(
     req,
     res,
     pool,
@@ -138,26 +141,4 @@ export const deleteUps = async (req: Request, res: Response) => {
     `DELETE FROM electrical_photo WHERE asset_id = ?`,
     `electrical`,
   );
-};
-
-export const allBrandUps = async (req: Request, res: Response) => {
-  await getAllRow(req, res, pool, `SELECT * FROM ups_brand`, `ups_brand`);
-};
-
-export const brandUps = async (req: Request, res: Response) => {
-  await getOneRow(req, res, pool, `SELECT * FROM ups_brand WHERE id = ?`);
-};
-
-export const createBrandUps = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await createEntity(req, res, 'ups_brand', 'ELUBR', columns);
-};
-
-export const updateBrandUps = async (req: Request, res: Response) => {
-  const columns = ['name'];
-  await updateEntity(req, res, 'ups_brand', columns);
-};
-
-export const deleteBrandUps = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM ups_brand WHERE id = ?`);
 };
