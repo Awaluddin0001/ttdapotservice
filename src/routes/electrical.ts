@@ -110,6 +110,7 @@ import {
   updateElectricalType,
 } from '@/controller/electrical/type/electricalTypeController';
 import { uploadPdf } from '@/utils/pdfUpload';
+import { allElectrical } from '@/controller/electrical/category/electricalController';
 
 const electrical = Router();
 
@@ -160,6 +161,10 @@ electrical.delete('/type', deleteElectricalType);
 electrical.get('/subcategories', electricalSubCategories);
 
 // Rectifier
+electrical.get('/all', allElectrical);
+electrical.get('', Rectifier);
+
+// Rectifier
 electrical.get('/rectifiers', allRectifier);
 electrical.get('/rectifier', Rectifier);
 electrical.post(
@@ -177,55 +182,119 @@ electrical.delete('/rectifier', deleteRectifier);
 // Battery
 electrical.get('/batteries', allBattery);
 electrical.get('/battery', Battery);
-electrical.post('/battery', upload.array('images', 3), createBattery);
-electrical.put('/battery', upload.array('images', 3), updateBattery);
+electrical.post(
+  '/battery',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createBattery,
+);
+electrical.put(
+  '/battery',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateBattery,
+);
 electrical.delete('/battery', deleteBattery);
 
 // panel
 electrical.get('/panels', allPanel);
 electrical.get('/panel', Panel);
-electrical.post('/panel', upload.array('images', 3), createPanel);
-electrical.put('/panel', upload.array('images', 3), updatePanel);
+electrical.post(
+  '/panel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createPanel,
+);
+electrical.put(
+  '/panel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatePanel,
+);
 electrical.delete('/panel', deletePanel);
 
 // ups
 electrical.get('/upses', allUps);
 electrical.get('/ups', Ups);
-electrical.post('/ups', upload.array('images', 3), createUps);
-electrical.put('/ups', upload.array('images', 3), updateUps);
+electrical.post(
+  '/ups',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createUps,
+);
+electrical.put(
+  '/ups',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateUps,
+);
 electrical.delete('/ups', deleteUps);
 
 // trafo
 electrical.get('/trafos', allTrafo);
 electrical.get('/trafo', Trafo);
-electrical.post('/trafo', upload.array('images', 3), createTrafo);
-electrical.put('/trafo', upload.array('images', 3), updateTrafo);
+electrical.post(
+  '/trafo',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createTrafo,
+);
+electrical.put(
+  '/trafo',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateTrafo,
+);
 electrical.delete('/trafo', deleteTrafo);
 
 // genset
 electrical.get('/gensets', allGenset);
 electrical.get('/genset', Genset);
-electrical.post('/genset', upload.array('images', 3), createGenset);
-electrical.put('/genset', upload.array('images', 3), updateGenset);
+electrical.post(
+  '/genset',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createGenset,
+);
+electrical.put(
+  '/genset',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateGenset,
+);
 electrical.delete('/genset', deleteGenset);
 
 // lvmdp
 electrical.get('/lvmdps', allLvmdp);
 electrical.get('/lvmdp', Lvmdp);
-electrical.post('/lvmdp', upload.array('images', 3), createLvmdp);
-electrical.put('/lvmdp', upload.array('images', 3), updateLvmdp);
+electrical.post(
+  '/lvmdp',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createLvmdp,
+);
+electrical.put(
+  '/lvmdp',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateLvmdp,
+);
 electrical.delete('/lvmdp', deleteLvmdp);
 
 // pdu
 electrical.get('/cubicles', allCubicle);
 electrical.get('/cubicle', Cubicle);
-electrical.post('/cubicle', upload.array('images', 3), createCubicle);
-electrical.put('/cubicle', upload.array('images', 3), updateCubicle);
+electrical.post(
+  '/cubicle',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createCubicle,
+);
+electrical.put(
+  '/cubicle',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateCubicle,
+);
 electrical.delete('/cubicle', deleteCubicle);
 
 // images
 electrical.get('/images', getElectricalImagesByAssetId);
-electrical.post('/images', upload.array('images', 3), uploadElectricalImage);
-electrical.put('/images', upload.array('images', 3), updateElectricalImages);
+electrical.post(
+  '/images',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  uploadElectricalImage,
+);
+electrical.put(
+  '/images',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateElectricalImages,
+);
 
 export default electrical;

@@ -158,7 +158,6 @@ export const queryBigAsset = (categoryName: string, newColumnsCa: string[]) => {
     rm.name as room_name,
     fl.name as floor_name,
     st.name as site_name,
-    v.company AS vendor_name, 
     u.name AS user_name,
     ep.foto1 AS photo1,
     ep.foto2 AS photo2,
