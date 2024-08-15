@@ -10,6 +10,7 @@ import {
 } from '@/utils/generateImageFileName';
 import path from 'path';
 import { getNewId } from '@/utils/idManipulation';
+import { createAuditTrail } from '@/models/auditTrailModel';
 
 // Fungsi untuk menjalankan query insert
 const insertRow = async (
@@ -38,6 +39,10 @@ export const createRow = async (
   electricalColumns: string[],
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   let connection;
 
   try {
@@ -109,6 +114,13 @@ export const createRow = async (
       }
     }
 
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Membuat ${newDeviceId}`,
+    });
+    await newTrail.save();
+
     res.status(201).json({ success: true });
   } catch (error) {
     console.error('Error creating device:', error);
@@ -130,7 +142,10 @@ export const createEntity = async (
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
-
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
     const newId = await getNewId(pool, tableName, prefix, 3);
@@ -173,6 +188,13 @@ export const createEntity = async (
       }
     }
 
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Membuat ${newId}`,
+    });
+    await newTrail.save();
+
     res.status(201).json({ success: true });
   } catch (error) {
     console.error(`Error creating entity in ${tableName}:`, error);
@@ -192,7 +214,10 @@ export const createEntityDocument = async (
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
-
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
     const newId = await getNewId(pool, tableName, prefix, 3);
@@ -226,6 +251,12 @@ export const createEntityDocument = async (
       }
     }
 
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Membuat Document ${newId}`,
+    });
+    await newTrail.save();
     res.status(201).json({ success: true });
   } catch (error) {
     console.error(`Error creating entity in ${tableName}:`, error);
@@ -263,10 +294,12 @@ export const updateRow = async (
   const { id, assetid } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
-
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
-    console.log(req.body.type_id);
     const deviceParams = [
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
@@ -343,7 +376,12 @@ export const updateRow = async (
         await insertRow(pool, photoQuery, photoParams);
       }
     }
-
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Memperbaharui ${assetid}`,
+    });
+    await newTrail.save();
     res.status(200).json({ success: true });
   } catch (error) {
     console.error('Error updating device:', error);
@@ -365,7 +403,10 @@ export const updateEntity = async (
   const { id } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
-
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
     const params = [
@@ -374,7 +415,6 @@ export const updateEntity = async (
       req.body.user_id,
       id,
     ];
-    console.log(params);
 
     await updateARow(
       pool,
@@ -412,6 +452,13 @@ export const updateEntity = async (
       }
     }
 
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Memperbaharui ${id}`,
+    });
+    await newTrail.save();
+
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(`Error updating entity in ${tableName}:`, error);
@@ -432,6 +479,10 @@ export const updateEntityDocument = async (
   const { id } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
 
   try {
     connection = await pool.getConnection();
@@ -441,8 +492,6 @@ export const updateEntityDocument = async (
       1,
     );
     let params;
-
-    console.log(req.body.document_name);
 
     if (req.body.document_name === 'null') {
       params = [req.body.activity, now, req.body.user_id, id];
@@ -491,6 +540,13 @@ export const updateEntityDocument = async (
         }
       }
     }
+
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Memperbaharui Document ${id}`,
+    });
+    await newTrail.save();
 
     res.status(200).json({ success: true });
   } catch (error) {

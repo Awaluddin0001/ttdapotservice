@@ -3,6 +3,7 @@ import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
 import { getBigDeviceRows, getBigDeviceRow } from '@/utils/getData';
 import { createRow, updateRow } from '@/utils/CreatePutDataElectrical';
+import { exportBigDeviceRows, exportData } from '@/utils/exportData';
 
 export const allRectifier = async (req: Request, res: Response) => {
   await getBigDeviceRows(
@@ -33,6 +34,80 @@ export const allRectifier = async (req: Request, res: Response) => {
     ],
     `electrical`,
     `electrical_rectifier`,
+    [
+      `LEFT JOIN electrical_brand b ON cas.brand_id = b.id`,
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportRectifierCsv = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.brand_id`,
+      `cas.name`,
+      `cas.role`,
+      `cas.type_id`,
+      `cas.capacity`,
+      `cas.modul`,
+      `cas.capacity_modul`,
+      `cas.load_current`,
+      `cas.occupancy`,
+      `cas.system_device`,
+      `cas.remark_aging`,
+      `cas.warranty`,
+      `b.name AS brand_name`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_rectifier`,
+    `csv`,
+    [
+      `LEFT JOIN electrical_brand b ON cas.brand_id = b.id`,
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportRectifierXlsx = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.brand_id`,
+      `cas.name`,
+      `cas.role`,
+      `cas.type_id`,
+      `cas.capacity`,
+      `cas.modul`,
+      `cas.capacity_modul`,
+      `cas.load_current`,
+      `cas.occupancy`,
+      `cas.system_device`,
+      `cas.remark_aging`,
+      `cas.warranty`,
+      `b.name AS brand_name`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_rectifier`,
+    `xlsx`,
     [
       `LEFT JOIN electrical_brand b ON cas.brand_id = b.id`,
       `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
@@ -171,6 +246,7 @@ export const updateRectifier = async (req: Request, res: Response) => {
     'room_id',
     'link_id',
     'status',
+    'sub_category_id',
     'condition_asset',
     'maintenance_id',
     'installation_date',

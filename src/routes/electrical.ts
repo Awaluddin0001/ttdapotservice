@@ -6,6 +6,8 @@ import {
   createRectifier,
   updateRectifier,
   deleteRectifier,
+  exportRectifierCsv,
+  exportRectifierXlsx,
 } from '@/controller/electrical/category/rectifierController';
 
 import {
@@ -167,6 +169,8 @@ electrical.get('', Rectifier);
 // Rectifier
 electrical.get('/rectifiers', allRectifier);
 electrical.get('/rectifier', Rectifier);
+electrical.get('/rectifier-export-csv', exportRectifierCsv);
+electrical.get('/rectifier-export-xlsx', exportRectifierXlsx);
 electrical.post(
   '/rectifier',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),

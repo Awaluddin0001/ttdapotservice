@@ -15,6 +15,7 @@ import security from '@/routes/security';
 import position from '@/routes/position';
 import path from 'path';
 import { downloadController } from './documents/controller/downloadController';
+import connectDB from './config/mongoDb';
 
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want
@@ -85,6 +86,12 @@ app.use(
 // for document
 app.use('/download/documents/:subdirectory/:filename', downloadController);
 
-app.listen(Number(process.env.PORT || 2001), hostname, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-});
+const startDapot = async () => {
+  await connectDB();
+
+  app.listen(Number(process.env.PORT || 2001), hostname, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+  });
+};
+
+startDapot();

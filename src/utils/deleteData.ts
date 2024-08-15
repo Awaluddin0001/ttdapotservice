@@ -3,6 +3,8 @@ import { RowDataPacket } from 'mysql2';
 import { Pool } from 'mysql2/promise';
 import fs from 'fs';
 import path from 'path';
+import moment from 'moment-timezone';
+import { createAuditTrail } from '@/models/auditTrailModel';
 
 // Fungsi untuk menghapus file gambar
 const deleteImageFiles = async (
@@ -79,6 +81,10 @@ export const deleteCombinedRow = async (
 ) => {
   const { id, assetid } = req.query;
   let connection;
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
 
@@ -90,6 +96,12 @@ export const deleteCombinedRow = async (
     await connection.query<RowDataPacket[]>(query3, [assetid]);
     await connection.query<RowDataPacket[]>(query1, [id]);
 
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.query.user_id,
+      action: `user ${req.query.user_id} Menghapus ${assetid}`,
+    });
+    await newTrail.save();
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
