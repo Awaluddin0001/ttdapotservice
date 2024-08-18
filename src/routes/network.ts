@@ -79,6 +79,7 @@ import {
   deleteComputer,
   updateComputer,
 } from '../controller/network/category/computerController';
+import { allNetwork } from '@/controller/network/category/networkController';
 
 const network = Router();
 
@@ -95,6 +96,9 @@ network.get('/maintenance', NetworkMaintenance);
 network.post('/maintenance', createMaintenanceNetwork);
 network.put('/maintenance', updateNetworkMaintenance);
 network.delete('/maintenance', deleteNetworkMaintenance);
+
+// network
+network.get('/all', allNetwork);
 
 // link rectifier
 network.get('/links', allLinkNetwork);

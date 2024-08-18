@@ -39,6 +39,8 @@ import {
   Battery,
   createBattery,
   deleteBattery,
+  exportBatteryCsv,
+  exportBatteryXlsx,
   updateBattery,
 } from '@/controller/electrical/category/batteryController';
 
@@ -48,6 +50,8 @@ import {
   createPanel,
   deletePanel,
   updatePanel,
+  exportPanelCsv,
+  exportPanelXlsx,
 } from '@/controller/electrical/category/panelController';
 
 import {
@@ -56,6 +60,8 @@ import {
   createUps,
   deleteUps,
   updateUps,
+  exportUpsCsv,
+  exportUpsXlsx,
 } from '@/controller/electrical/category/upsController';
 
 import {
@@ -64,6 +70,8 @@ import {
   createTrafo,
   deleteTrafo,
   updateTrafo,
+  exportTrafoCsv,
+  exportTrafoXlsx,
 } from '@/controller/electrical/category/trafoController';
 
 import {
@@ -72,6 +80,8 @@ import {
   createGenset,
   deleteGenset,
   updateGenset,
+  exportGensetCsv,
+  exportGensetXlsx,
 } from '@/controller/electrical/category/gensetController';
 
 import {
@@ -79,6 +89,8 @@ import {
   allLvmdp,
   createLvmdp,
   deleteLvmdp,
+  exportLvmdpCsv,
+  exportLvmdpXlsx,
   updateLvmdp,
 } from '@/controller/electrical/category/lvmdpController';
 
@@ -88,6 +100,8 @@ import {
   createCubicle,
   deleteCubicle,
   updateCubicle,
+  exportCubicleCsv,
+  exportCubicleXlsx,
 } from '@/controller/electrical/category/cubicleController';
 
 import {
@@ -162,9 +176,8 @@ electrical.delete('/type', deleteElectricalType);
 // sub category electrical
 electrical.get('/subcategories', electricalSubCategories);
 
-// Rectifier
+// electrical
 electrical.get('/all', allElectrical);
-electrical.get('', Rectifier);
 
 // Rectifier
 electrical.get('/rectifiers', allRectifier);
@@ -186,6 +199,8 @@ electrical.delete('/rectifier', deleteRectifier);
 // Battery
 electrical.get('/batteries', allBattery);
 electrical.get('/battery', Battery);
+electrical.get('/battery-export-csv', exportBatteryCsv);
+electrical.get('/battery-export-xlsx', exportBatteryXlsx);
 electrical.post(
   '/battery',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -201,6 +216,8 @@ electrical.delete('/battery', deleteBattery);
 // panel
 electrical.get('/panels', allPanel);
 electrical.get('/panel', Panel);
+electrical.get('/panel-export-csv', exportPanelCsv);
+electrical.get('/panel-export-xlsx', exportPanelXlsx);
 electrical.post(
   '/panel',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -216,6 +233,8 @@ electrical.delete('/panel', deletePanel);
 // ups
 electrical.get('/upses', allUps);
 electrical.get('/ups', Ups);
+electrical.get('/ups-export-csv', exportUpsCsv);
+electrical.get('/ups-export-xlsx', exportUpsXlsx);
 electrical.post(
   '/ups',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -231,6 +250,8 @@ electrical.delete('/ups', deleteUps);
 // trafo
 electrical.get('/trafos', allTrafo);
 electrical.get('/trafo', Trafo);
+electrical.get('/trafo-export-csv', exportTrafoCsv);
+electrical.get('/trafo-export-xlsx', exportTrafoXlsx);
 electrical.post(
   '/trafo',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -246,6 +267,8 @@ electrical.delete('/trafo', deleteTrafo);
 // genset
 electrical.get('/gensets', allGenset);
 electrical.get('/genset', Genset);
+electrical.get('/genset-export-csv', exportGensetCsv);
+electrical.get('/genset-export-xlsx', exportGensetXlsx);
 electrical.post(
   '/genset',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -261,6 +284,8 @@ electrical.delete('/genset', deleteGenset);
 // lvmdp
 electrical.get('/lvmdps', allLvmdp);
 electrical.get('/lvmdp', Lvmdp);
+electrical.get('/lvmdp-export-csv', exportLvmdpCsv);
+electrical.get('/lvmdp-export-xlsx', exportLvmdpXlsx);
 electrical.post(
   '/lvmdp',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
@@ -276,6 +301,8 @@ electrical.delete('/lvmdp', deleteLvmdp);
 // pdu
 electrical.get('/cubicles', allCubicle);
 electrical.get('/cubicle', Cubicle);
+electrical.get('/cubicle-export-csv', exportCubicleCsv);
+electrical.get('/cubicle-export-xlsx', exportCubicleXlsx);
 electrical.post(
   '/cubicle',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),

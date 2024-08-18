@@ -7,6 +7,7 @@ import {
 } from '@/utils/getData';
 import { createRow, updateRow } from '@/utils/CreatePutDataElectrical';
 import { deleteCombinedRow } from '@/utils/deleteData';
+import { exportBigDeviceRows } from '@/utils/exportData';
 
 export const allPanel = async (req: Request, res: Response) => {
   await getBigDeviceRows(
@@ -28,6 +29,60 @@ export const allPanel = async (req: Request, res: Response) => {
     ],
     `electrical`,
     `electrical_panel`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportPanelCsv = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.capacity`,
+      `cas.function_category`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_panel`,
+    `csv`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportPanelXlsx = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.capacity`,
+      `cas.function_category`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_panel`,
+    `xlsx`,
     [
       `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
       `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,

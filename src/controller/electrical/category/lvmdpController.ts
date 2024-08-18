@@ -7,6 +7,7 @@ import {
   getRowQuery,
 } from '@/utils/getData';
 import { createRow, updateRow } from '@/utils/CreatePutDataElectrical';
+import { exportBigDeviceRows } from '@/utils/exportData';
 
 export const allLvmdp = async (req: Request, res: Response) => {
   await getBigDeviceRows(
@@ -31,6 +32,66 @@ export const allLvmdp = async (req: Request, res: Response) => {
     ],
     `electrical`,
     `electrical_lvmdp`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportLvmdpCsv = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.voltage_level`,
+      `cas.current_rating`,
+      `cas.breaker_type`,
+      `cas.breaker_rating`,
+      `cas.section`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_lvmdp`,
+    `csv`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportLvmdpXlsx = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.voltage_level`,
+      `cas.current_rating`,
+      `cas.breaker_type`,
+      `cas.breaker_rating`,
+      `cas.section`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_lvmdp`,
+    `xlsx`,
     [
       `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
       `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,

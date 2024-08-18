@@ -8,8 +8,28 @@ const storage = multer.diskStorage({
     let uploadPath = path.join(__dirname, '../../src/images');
     if (req.url.includes('electrical')) {
       uploadPath = path.join(uploadPath, '/electrical');
-    } else if (req.url.includes('air_conditioning')) {
+    } else if (req.url.includes('airconditioning')) {
       uploadPath = path.join(uploadPath, '/air_conditioning');
+    } else if (req.url.includes('buildingfinishes')) {
+      uploadPath = path.join(uploadPath, '/building_finishes');
+    } else if (req.url.includes('conveyance')) {
+      uploadPath = path.join(uploadPath, '/conveyance');
+    } else if (req.url.includes('extinguish')) {
+      uploadPath = path.join(uploadPath, '/extinguish');
+    } else if (req.url.includes('fluid')) {
+      uploadPath = path.join(uploadPath, '/fluid');
+    } else if (req.url.includes('furniture')) {
+      uploadPath = path.join(uploadPath, '/furniture');
+    } else if (req.url.includes('lighting')) {
+      uploadPath = path.join(uploadPath, '/lighting');
+    } else if (req.url.includes('network')) {
+      uploadPath = path.join(uploadPath, '/network');
+    } else if (req.url.includes('pump')) {
+      uploadPath = path.join(uploadPath, '/pump');
+    } else if (req.url.includes('safety')) {
+      uploadPath = path.join(uploadPath, '/safety');
+    } else if (req.url.includes('security')) {
+      uploadPath = path.join(uploadPath, '/security');
     }
     cb(null, uploadPath);
   },

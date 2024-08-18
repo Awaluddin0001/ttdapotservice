@@ -7,6 +7,7 @@ import {
   globalFilterDevice,
   queryBigAsset,
   queryBigDevice,
+  queryBigNetwork,
   queryPage,
 } from '@/utils/idManipulation';
 
@@ -21,11 +22,18 @@ export const getBigAssetRows = async (
   let connection;
   try {
     connection = await pool.getConnection();
+    let otherCategoryName;
+    let query;
 
     const { globalFilter } = req.query;
     const { page, limit, offset } = queryPage(req);
 
-    const query = queryBigAsset(categoryName, newColumnsCa);
+    query = queryBigAsset(categoryName, newColumnsCa);
+
+    if (categoryName === `network_it`) {
+      otherCategoryName = `network`;
+      query = queryBigNetwork(otherCategoryName, categoryName, newColumnsCa);
+    }
 
     // Base query
     let filterQuery = query;

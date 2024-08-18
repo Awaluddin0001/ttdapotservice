@@ -20,7 +20,16 @@ import connectDB from './config/mongoDb';
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://77.37.44.158:10000',
+    'http://192.168.1.62:5173',
+    'http://localhost:5173',
+  ], // Daftar origin yang diizinkan
+  credentials: true, // Mengizinkan pengiriman cookie dan header khusus
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/api/v1/dapot/airconditioning', ac);

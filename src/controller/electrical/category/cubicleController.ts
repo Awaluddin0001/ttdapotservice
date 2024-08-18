@@ -3,6 +3,7 @@ import pool from '@/config/mySql';
 import { getBigDeviceRows, getBigDeviceRow } from '@/utils/getData';
 import { createRow, updateRow } from '@/utils/CreatePutDataElectrical';
 import { deleteCombinedRow } from '@/utils/deleteData';
+import { exportBigDeviceRows } from '@/utils/exportData';
 
 export const allCubicle = async (req: Request, res: Response) => {
   await getBigDeviceRows(
@@ -26,6 +27,64 @@ export const allCubicle = async (req: Request, res: Response) => {
     ],
     `electrical`,
     `electrical_cubicle`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportCubicleCsv = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.manufactur`,
+      `cas.serial_number`,
+      `cas.load_break`,
+      `cas.breaker_count`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_cubicle`,
+    `csv`,
+    [
+      `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
+      `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
+    ],
+  );
+};
+export const exportCubicleXlsx = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.name`,
+      `cas.type_id`,
+      `cas.manufactur`,
+      `cas.serial_number`,
+      `cas.load_break`,
+      `cas.breaker_count`,
+      `ca.ne_id as ne_id`,
+      `ca.link_id as link_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `lk.incoming as incoming`,
+      `lk.outgoing as outgoing`,
+      `t.name AS type_name`,
+    ],
+    `electrical`,
+    `electrical_cubicle`,
+    `xlsx`,
     [
       `LEFT JOIN electrical_type t ON cas.type_id = t.id`,
       `LEFT JOIN electrical_link lk ON ca.link_id = lk.id`,
