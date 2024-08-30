@@ -32,7 +32,7 @@ export const createRowNetwork = async (
     connection = await pool.getConnection();
 
     const newDeviceId = await getNewId(pool, deviceTable, devicePrefix, 3);
-    const newairconditioningId = await getNewId(pool, 'network_it', 'NI', 6);
+    const newairconditioningId = await getNewId(pool, 'network', 'NI', 6);
 
     const deviceParams = [
       newDeviceId,
@@ -47,7 +47,7 @@ export const createRowNetwork = async (
     ];
 
     const deviceQuery = `INSERT INTO ${deviceTable} (id, ${deviceColumns.join(', ')}, created_at) VALUES (?, ${deviceColumns.map(() => '?').join(', ')}, ?)`;
-    const electricalQuery = `INSERT INTO network_it (id, device_id, ${airconditioningColumns.map((col) => (col === 'condition' ? `\`condition\`` : col)).join(', ')}, created_at) VALUES (?, ?, ${airconditioningColumns.map(() => '?').join(', ')}, ?)`;
+    const electricalQuery = `INSERT INTO network (id, device_id, ${airconditioningColumns.map((col) => (col === 'condition' ? `\`condition\`` : col)).join(', ')}, created_at) VALUES (?, ?, ${airconditioningColumns.map(() => '?').join(', ')}, ?)`;
 
     console.log(electricalQuery);
 
@@ -129,7 +129,7 @@ export const updateRowNetwork = async (
 
     await updateARow(
       pool,
-      `UPDATE network_it SET
+      `UPDATE network SET
           ${airconditioningColumns.map((col) => (col === 'condition' ? `\`condition\` ` : col) + ` = ?`).join(', ')},
           created_at = ?,
           user_id = ?

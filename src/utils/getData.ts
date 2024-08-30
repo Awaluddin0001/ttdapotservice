@@ -521,11 +521,9 @@ export const getRowQuery = async (
   let connection;
   try {
     connection = await pool.getConnection();
-
     const { globalFilter } = req.query;
 
     const { page, limit, offset } = queryPage(req);
-
     // Base query
     let filterQuery = query;
 

@@ -92,8 +92,16 @@ security.delete('/maintenance', deletesecurityMaintenance);
 // cctv
 security.get('/cctvs', allCctv);
 security.get('/cctv', Cctv);
-security.post('/cctv', upload.array('images', 3), createCctv);
-security.put('/cctv', upload.array('images', 3), updateCctv);
+security.post(
+  '/cctv',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createCctv,
+);
+security.put(
+  '/cctv',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateCctv,
+);
 security.delete('/cctv', deleteCctv);
 
 // video recording
@@ -101,12 +109,12 @@ security.get('/videorecordings', allVideoRecording);
 security.get('/videorecording', VideoRecording);
 security.post(
   '/videorecording',
-  upload.array('images', 3),
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
   createVideoRecording,
 );
 security.put(
   '/videorecording',
-  upload.array('images', 3),
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
   updateVideoRecording,
 );
 security.delete('/videorecording', deleteVideoRecording);
@@ -114,36 +122,76 @@ security.delete('/videorecording', deleteVideoRecording);
 // access control
 security.get('/accesscontrols', allAccessControl);
 security.get('/accesscontrol', AccessControl);
-security.post('/accesscontrol', upload.array('images', 3), createAccessControl);
-security.put('/accesscontrol', upload.array('images', 3), updateAccessControl);
+security.post(
+  '/accesscontrol',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createAccessControl,
+);
+security.put(
+  '/accesscontrol',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateAccessControl,
+);
 security.delete('/accesscontrol', deleteAccessControl);
 
 // alarm
 security.get('/alarms', allAlarm);
 security.get('/alarm', Alarm);
-security.post('/alarm', upload.array('images', 3), createAlarm);
-security.put('/alarm', upload.array('images', 3), updateAlarm);
+security.post(
+  '/alarm',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createAlarm,
+);
+security.put(
+  '/alarm',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateAlarm,
+);
 security.delete('/alarm', deleteAlarm);
 
 // button
 security.get('/buttons', allButton);
 security.get('/button', Button);
-security.post('/button', upload.array('images', 3), createButton);
-security.put('/button', upload.array('images', 3), updateButton);
+security.post(
+  '/button',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createButton,
+);
+security.put(
+  '/button',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateButton,
+);
 security.delete('/button', deleteButton);
 
 // detektor
 security.get('/detektors', allDetektor);
 security.get('/detektor', Detektor);
-security.post('/detektor', upload.array('images', 3), createDetektor);
-security.put('/detektor', upload.array('images', 3), updateDetektor);
+security.post(
+  '/detektor',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createDetektor,
+);
+security.put(
+  '/detektor',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateDetektor,
+);
 security.delete('/detektor', deleteDetektor);
 
 // sound
 security.get('/sounds', allSound);
 security.get('/sound', Sound);
-security.post('/sound', upload.array('images', 3), createSound);
-security.put('/sound', upload.array('images', 3), updateSound);
+security.post(
+  '/sound',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createSound,
+);
+security.put(
+  '/sound',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateSound,
+);
 security.delete('/sound', deleteSound);
 
 export default security;

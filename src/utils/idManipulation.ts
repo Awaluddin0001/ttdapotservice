@@ -43,12 +43,11 @@ export const makeIdTable = (
 };
 
 export const queryPage = (req: Request) => {
-  const { noPage } = req.query;
-
+  const { nopage } = req.query;
   let page;
   let limit;
 
-  if (noPage === 'no') {
+  if (nopage === 'no') {
     // When noPage is 'no', fetch all records
     page = 1;
     limit = 1000000;
@@ -259,8 +258,22 @@ export const globalFilterAsset = (
   columnFilter?: string[] | null,
 ) => {
   const { globalFilter } = req.query;
-  if (columnFilter) {
-    const query = `
+  let query = '';
+
+  if (columnFilter && columnFilter.length > 0) {
+    const columnConditions = columnFilter
+      .map((filter) => {
+        const columnName = filter.split(/\s+AS\s+/i)[0]; // Split by ' AS ' or ' as ' and take the first part
+        return `${columnName.trim()} LIKE '%${globalFilter}%'`;
+      })
+      .join(' OR ');
+    query = `
+      AND (
+            ${columnConditions}
+          )
+    `;
+  } else {
+    query = `
     AND (
             ca.id LIKE '%${globalFilter}%'
             OR ca.site_id LIKE '%${globalFilter}%'
@@ -268,27 +281,11 @@ export const globalFilterAsset = (
             OR ca.room_id LIKE '%${globalFilter}%'
             OR ca.sub_category_id LIKE '%${globalFilter}%' 
             OR rm.name LIKE '%${globalFilter}%'
-            OR v.company LIKE '%${globalFilter}%',
-            OR u.name LIKE '%${globalFilter}%'
             OR v.company LIKE '%${globalFilter}%'
             OR u.name LIKE '%${globalFilter}%'
           )
     `;
-    let queryFilter = +columnFilter.map((filter) => `OR ${filter}`).join(' ');
-    return query + queryFilter;
   }
-  return `
-  AND (
-          ca.id LIKE '%${globalFilter}%'
-          OR ca.site_id LIKE '%${globalFilter}%'
-          OR ca.floor_id LIKE '%${globalFilter}%'
-          OR ca.room_id LIKE '%${globalFilter}%'
-          OR ca.sub_category_id LIKE '%${globalFilter}%' 
-          OR rm.name LIKE '%${globalFilter}%'
-          OR v.company LIKE '%${globalFilter}%',
-          OR u.name LIKE '%${globalFilter}%'
-          OR v.company LIKE '%${globalFilter}%'
-          OR u.name LIKE '%${globalFilter}%'
-        )
-  `;
+
+  return query;
 };

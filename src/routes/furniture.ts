@@ -28,8 +28,16 @@ furniture.delete('/vendor', deleteFurnitureVendor);
 // rackserver
 furniture.get('/furnitures', allFurniture);
 furniture.get('/furniture', Furniture);
-furniture.post('/furniture', upload.array('images', 3), createFurniture);
-furniture.put('/furniture', upload.array('images', 3), updateFurniture);
+furniture.post(
+  '/furniture',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createFurniture,
+);
+furniture.put(
+  '/furniture',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateFurniture,
+);
 furniture.delete('/furniture', deleteFurniture);
 
 export default furniture;

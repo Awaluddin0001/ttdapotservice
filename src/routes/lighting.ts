@@ -44,8 +44,16 @@ lighting.delete('/maintenance', deletelightingMaintenance);
 // lighting
 lighting.get('/lightings', allLighting);
 lighting.get('/lighting', Lighting);
-lighting.post('/lighting', upload.array('images', 3), createLighting);
-lighting.put('/lighting', upload.array('images', 3), updateLighting);
+lighting.post(
+  '/lighting',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createLighting,
+);
+lighting.put(
+  '/lighting',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateLighting,
+);
 lighting.delete('/lighting', deleteLighting);
 
 export default lighting;

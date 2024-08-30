@@ -13,8 +13,8 @@ export const allNetwork = async (req: Request, res: Response) => {
       `ca.status as status`,
       `ca.condition_asset`,
       `ca.device_id`,
-      `suca.name AS type_name`,
+      `suca.name as type_name`,
     ],
-    `network_it`,
+    `network`,
   );
 };

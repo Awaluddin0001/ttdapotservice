@@ -9,11 +9,16 @@ import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allNetworkVendor = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM network_vendor`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM network_vendor as cas`,
+  );
 };
 
 export const NetworkVendor = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,

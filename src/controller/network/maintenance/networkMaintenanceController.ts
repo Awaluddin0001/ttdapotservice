@@ -1,41 +1,61 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
+import { getRowQuery } from '@/utils/getData';
+import { deleteRowDocument } from '@/utils/deleteData';
 import {
-  getBigDeviceRows,
-  getBigDeviceRow,
-  getRowQuery,
-} from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+  createEntityDocument,
+  updateEntityDocument,
+} from '@/utils/CreatePutDataElectrical';
 
 export const allNetworkMaintenance = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM maintenance_network`);
-};
-
-export const NetworkMaintenance = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM maintenance_network WHERE id = ?`,
+    `SELECT cas.*, u.name as user_name FROM network_maintenance as cas`,
+  );
+};
+
+export const NetworkMaintenance = async (req: Request, res: Response) => {
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM network_maintenance WHERE id = ?`,
   );
 };
 
 export const deleteNetworkMaintenance = async (req: Request, res: Response) => {
-  await deleteRow(
+  await deleteRowDocument(
     req,
     res,
     pool,
-    `DELETE FROM maintenance_network WHERE id = ?`,
+    `DELETE FROM network_maintenance WHERE id = ?`,
+    'network',
+    `network_maintenance`,
   );
 };
 
 export const createMaintenanceNetwork = async (req: Request, res: Response) => {
-  const columns = [`activity`, `document_name`];
-  await createEntity(req, res, 'maintenance_network', 'NIMAI', columns);
+  const columns = [`activity`];
+  await createEntityDocument(
+    req,
+    res,
+    'network_maintenance',
+    'NIMAI',
+    columns,
+    'network',
+  );
 };
 
 export const updateNetworkMaintenance = async (req: Request, res: Response) => {
-  const columns = [`activity`, `document_name`];
-  await updateEntity(req, res, 'maintenance_network', columns);
+  const columns = [`activity`];
+  await updateEntityDocument(
+    req,
+    res,
+    'network_maintenance',
+    columns,
+    'network',
+    'NIMAI',
+  );
 };

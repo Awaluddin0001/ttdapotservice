@@ -55,10 +55,19 @@ export const createRow = async (
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
     ];
+
+    const installationDate = req.body.installation_date
+      ? moment(req.body.installation_date).isValid()
+        ? moment(req.body.installation_date).format('YYYY-MM-DD')
+        : null
+      : null;
+
     const electricalParams = [
       newElectricalId,
       newDeviceId,
-      ...electricalColumns.map((col) => req.body[col] || null),
+      ...electricalColumns.map((col) =>
+        col === 'installation_date' ? installationDate : req.body[col] || null,
+      ),
       now,
     ];
 
@@ -219,9 +228,9 @@ export const createEntityDocument = async (
   const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
   const AuditTrailData = createAuditTrail(collectionName);
   try {
+    console.log(req.body);
     connection = await pool.getConnection();
     const newId = await getNewId(pool, tableName, prefix, 3);
-    console.log(req.body);
     const newFileName = generateDocumentFileName(`${prefix}`, newId, 1);
     const params = [
       newId,

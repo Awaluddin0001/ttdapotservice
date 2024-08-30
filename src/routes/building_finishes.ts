@@ -84,29 +84,61 @@ building_finishes.delete('/maintenance', deletebuildingfinisherMaintenance);
 // ceiling
 building_finishes.get('/ceilings', allCeiling);
 building_finishes.get('/ceiling', Ceiling);
-building_finishes.post('/ceiling', upload.array('images', 3), createCeiling);
-building_finishes.put('/ceiling', upload.array('images', 3), updateCeiling);
+building_finishes.post(
+  '/ceiling',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createCeiling,
+);
+building_finishes.put(
+  '/ceiling',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateCeiling,
+);
 building_finishes.delete('/ceiling', deleteCeiling);
 
 // ceramic
 building_finishes.get('/ceramics', allCeramic);
 building_finishes.get('/ceramic', Ceramic);
-building_finishes.post('/ceramic', upload.array('images', 3), createCeramic);
-building_finishes.put('/ceramic', upload.array('images', 3), updateCeramic);
+building_finishes.post(
+  '/ceramic',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createCeramic,
+);
+building_finishes.put(
+  '/ceramic',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateCeramic,
+);
 building_finishes.delete('/ceramic', deleteCeramic);
 
 // door
 building_finishes.get('/doors', alldoor);
 building_finishes.get('/door', door);
-building_finishes.post('/door', upload.array('images', 3), createdoor);
-building_finishes.put('/door', upload.array('images', 3), updatedoor);
+building_finishes.post(
+  '/door',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createdoor,
+);
+building_finishes.put(
+  '/door',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatedoor,
+);
 building_finishes.delete('/door', deletedoor);
 
 // window
 building_finishes.get('/windows', allwindow);
 building_finishes.get('/window', window);
-building_finishes.post('/window', upload.array('images', 3), createwindow);
-building_finishes.put('/window', upload.array('images', 3), updatewindow);
+building_finishes.post(
+  '/window',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createwindow,
+);
+building_finishes.put(
+  '/window',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatewindow,
+);
 building_finishes.delete('/window', deletewindow);
 
 // wallpaper
@@ -114,17 +146,29 @@ building_finishes.get('/wallpapers', allwallpaper);
 building_finishes.get('/wallpaper', wallpaper);
 building_finishes.post(
   '/wallpaper',
-  upload.array('images', 3),
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
   createwallpaper,
 );
-building_finishes.put('/wallpaper', upload.array('images', 3), updatewallpaper);
+building_finishes.put(
+  '/wallpaper',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatewallpaper,
+);
 building_finishes.delete('/wallpaper', deletewallpaper);
 
 // mebel
 building_finishes.get('/mebels', allmebel);
 building_finishes.get('/mebel', mebel);
-building_finishes.post('/mebel', upload.array('images', 3), createmebel);
-building_finishes.put('/mebel', upload.array('images', 3), updatemebel);
+building_finishes.post(
+  '/mebel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createmebel,
+);
+building_finishes.put(
+  '/mebel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatemebel,
+);
 building_finishes.delete('/mebel', deletemebel);
 
 export default building_finishes;

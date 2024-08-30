@@ -80,21 +80,59 @@ import {
   updateComputer,
 } from '../controller/network/category/computerController';
 import { allNetwork } from '@/controller/network/category/networkController';
+import {
+  createNetworkBrand,
+  deleteNetworkBrand,
+  networkBrand,
+  networkBrands,
+  updateNetworkBrand,
+} from '@/controller/network/brand/networkBrandController';
+import {
+  createNetworkType,
+  deleteNetworkType,
+  networkSubCategories,
+  networkType,
+  networkTypes,
+  updateNetworkType,
+} from '@/controller/network/type/electricalTypeController';
+import { uploadPdf } from '@/utils/pdfUpload';
 
 const network = Router();
 
-// vendor rectifier
+// vendor
 network.get('/vendors', allNetworkVendor);
 network.get('/vendor', NetworkVendor);
 network.post('/vendor', createNetworkVendor);
 network.put('/vendor', updateNetworkVendor);
 network.delete('/vendor', deleteNetworkVendor);
 
-// maintenance rectifier
+// brand
+network.get('/brands', networkBrands);
+network.get('/brand', networkBrand);
+network.post('/brand', createNetworkBrand);
+network.put('/brand', updateNetworkBrand);
+
+// type
+network.get('/types', networkTypes);
+network.get('/subcategories', networkSubCategories);
+network.get('/type', networkType);
+network.post('/type', createNetworkType);
+network.put('/type', updateNetworkType);
+network.delete('/type', deleteNetworkType);
+
+// maintenance
 network.get('/maintenances', allNetworkMaintenance);
 network.get('/maintenance', NetworkMaintenance);
-network.post('/maintenance', createMaintenanceNetwork);
-network.put('/maintenance', updateNetworkMaintenance);
+network.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenanceNetwork,
+);
+network.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updateNetworkMaintenance,
+);
 network.delete('/maintenance', deleteNetworkMaintenance);
 
 // network
@@ -110,50 +148,106 @@ network.delete('/link', deleteLinkNetwork);
 // rackserver
 network.get('/rackservers', allRackserver);
 network.get('/rackserver', Rackserver);
-network.post('/rackserver', upload.array('images', 3), createRackserver);
-network.put('/rackserver', upload.array('images', 3), updateRackserver);
+network.post(
+  '/rackserver',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createRackserver,
+);
+network.put(
+  '/rackserver',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateRackserver,
+);
 network.delete('/rackserver', deleteRackserver);
 
 // storage
 network.get('/storages', allStorage);
 network.get('/storage', Storage);
-network.post('/storage', upload.array('images', 3), createStorage);
-network.put('/storage', upload.array('images', 3), updateStorage);
+network.post(
+  '/storage',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createStorage,
+);
+network.put(
+  '/storage',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateStorage,
+);
 network.delete('/storage', deleteStorage);
 
 // networkswitch
 network.get('/switchs', allNetworkswitch);
 network.get('/switch', Networkswitch);
-network.post('/switch', upload.array('images', 3), createNetworkswitch);
-network.put('/switch', upload.array('images', 3), updateNetworkswitch);
+network.post(
+  '/switch',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createNetworkswitch,
+);
+network.put(
+  '/switch',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateNetworkswitch,
+);
 network.delete('/switch', deleteNetworkswitch);
 
 // routes
 network.get('/routers', allRouter);
 network.get('/router', routes);
-network.post('/router', upload.array('images', 3), createRouter);
-network.put('/router', upload.array('images', 3), updateRouter);
+network.post(
+  '/router',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createRouter,
+);
+network.put(
+  '/router',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateRouter,
+);
 network.delete('/router', deleteRouter);
 
 // firewall
 network.get('/firewalls', allFirewall);
 network.get('/firewall', Firewall);
-network.post('/firewall', upload.array('images', 3), createFirewall);
-network.put('/firewall', upload.array('images', 3), updateFirewall);
+network.post(
+  '/firewall',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createFirewall,
+);
+network.put(
+  '/firewall',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateFirewall,
+);
 network.delete('/firewall', deleteFirewall);
 
 // patchpanel
 network.get('/patchpanels', allPatchpanels);
 network.get('/patchpanel', Patchpanels);
-network.post('/patchpanel', upload.array('images', 3), createPatchpanels);
-network.put('/patchpanel', upload.array('images', 3), updatePatchpanels);
+network.post(
+  '/patchpanel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createPatchpanels,
+);
+network.put(
+  '/patchpanel',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updatePatchpanels,
+);
 network.delete('/patchpanel', deletePatchpanels);
 
 // computer
 network.get('/computers', allComputer);
 network.get('/computer', Computer);
-network.post('/computer', upload.array('images', 3), createComputer);
-network.put('/computer', upload.array('images', 3), updateComputer);
+network.post(
+  '/computer',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createComputer,
+);
+network.put(
+  '/computer',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateComputer,
+);
 network.delete('/computer', deleteComputer);
 
 export default network;

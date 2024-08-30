@@ -18,6 +18,7 @@ export const allLinkElectrical = async (req: Request, res: Response) => {
 };
 
 export const linkElectrical = async (req: Request, res: Response) => {
+  console.log('run link');
   await getBigDeviceRow(
     req,
     res,

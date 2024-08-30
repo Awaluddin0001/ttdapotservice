@@ -87,22 +87,46 @@ ac.delete('/type', deleteAirConditioningType);
 // air
 ac.get('/airs', allAir);
 ac.get('/air', Air);
-ac.post('/air', upload.array('images', 3), createAir);
-ac.put('/air', upload.array('images', 3), updateAir);
+ac.post(
+  '/air',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createAir,
+);
+ac.put(
+  '/air',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateAir,
+);
 ac.delete('/air', deleteAir);
 
 // heater
 ac.get('/heaters', allHeater);
 ac.get('/heater', Heater);
-ac.post('/heater', upload.array('images', 3), createHeater);
-ac.put('/heater', upload.array('images', 3), updateHeater);
+ac.post(
+  '/heater',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createHeater,
+);
+ac.put(
+  '/heater',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateHeater,
+);
 ac.delete('/heater', deleteHeater);
 
 // cooling
 ac.get('/coolings', allCooling);
 ac.get('/cooling', Cooling);
-ac.post('/cooling', upload.array('images', 3), createCooling);
-ac.put('/cooling', upload.array('images', 3), updateCooling);
+ac.post(
+  '/cooling',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createCooling,
+);
+ac.put(
+  '/cooling',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateCooling,
+);
 ac.delete('/cooling', deleteCooling);
 
 export default ac;

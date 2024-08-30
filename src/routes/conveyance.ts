@@ -44,8 +44,16 @@ conveyance.delete('/maintenance', deleteconveyanceMaintenance);
 // conveyance
 conveyance.get('/conveyances', allConveyance);
 conveyance.get('/conveyance', Conveyance);
-conveyance.post('/conveyance', upload.array('images', 3), createConveyance);
-conveyance.put('/conveyance', upload.array('images', 3), updateConveyance);
+conveyance.post(
+  '/conveyance',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createConveyance,
+);
+conveyance.put(
+  '/conveyance',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateConveyance,
+);
 conveyance.delete('/conveyance', deleteConveyance);
 
 export default conveyance;

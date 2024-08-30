@@ -44,8 +44,16 @@ fluid.delete('/maintenance', deleteFluidMaintenance);
 // conveyance
 fluid.get('/fluids', allFluid);
 fluid.get('/fluid', Fluid);
-fluid.post('/fluid', upload.array('images', 3), createFluid);
-fluid.put('/fluid', upload.array('images', 3), updateFluid);
+fluid.post(
+  '/fluid',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  createFluid,
+);
+fluid.put(
+  '/fluid',
+  upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
+  updateFluid,
+);
 fluid.delete('/fluid', deleteFluid);
 
 export default fluid;

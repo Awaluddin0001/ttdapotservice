@@ -16,6 +16,7 @@ import position from '@/routes/position';
 import path from 'path';
 import { downloadController } from './documents/controller/downloadController';
 import connectDB from './config/mongoDb';
+import pump from './routes/pump';
 
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want
@@ -44,6 +45,7 @@ app.use('/api/v1/dapot/network', network);
 app.use('/api/v1/dapot/safety', safety);
 app.use('/api/v1/dapot/security', security);
 app.use('/api/v1/dapot/position', position);
+app.use('/api/v1/dapot/pump', pump);
 
 // for image
 app.use(
