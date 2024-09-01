@@ -7,6 +7,7 @@ import pool from '@/config/mySql'; // Import pool langsung
 import { generateImageFileName } from '@/utils/generateImageFileName';
 import path from 'path';
 import { getNewId } from './idManipulation';
+import { createAuditTrail } from '@/models/auditTrailModel';
 
 // Fungsi untuk menjalankan query insert
 const insertRow = async (
@@ -23,42 +24,63 @@ export const createRowNetwork = async (
   deviceTable: string,
   devicePrefix: string,
   deviceColumns: string[],
-  airconditioningColumns: string[],
+  networkColumns: string[],
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   let connection;
 
   try {
     connection = await pool.getConnection();
-
     const newDeviceId = await getNewId(pool, deviceTable, devicePrefix, 3);
-    const newairconditioningId = await getNewId(pool, 'network', 'NI', 6);
+    const newNetworkId = await getNewId(pool, 'network', 'NE', 6);
 
     const deviceParams = [
       newDeviceId,
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
     ];
-    const airconditioningParams = [
-      newairconditioningId,
+
+    const installationDate = req.body.installation_date
+      ? moment(req.body.installation_date).isValid()
+        ? moment(req.body.installation_date).format('YYYY-MM-DD')
+        : null
+      : null;
+
+    const networkParams = [
+      newNetworkId,
       newDeviceId,
-      ...airconditioningColumns.map((col) => req.body[col] || null),
+      ...networkColumns.map((col) =>
+        col === 'installation_date' ? installationDate : req.body[col] || null,
+      ),
       now,
     ];
 
     const deviceQuery = `INSERT INTO ${deviceTable} (id, ${deviceColumns.join(', ')}, created_at) VALUES (?, ${deviceColumns.map(() => '?').join(', ')}, ?)`;
-    const electricalQuery = `INSERT INTO network (id, device_id, ${airconditioningColumns.map((col) => (col === 'condition' ? `\`condition\`` : col)).join(', ')}, created_at) VALUES (?, ?, ${airconditioningColumns.map(() => '?').join(', ')}, ?)`;
-
-    console.log(electricalQuery);
+    const networkQuery = `INSERT INTO network (id, device_id, ${networkColumns.join(', ')}, created_at) VALUES (?, ?, ${networkColumns.map(() => '?').join(', ')}, ?)`;
 
     await insertRow(pool, deviceQuery, deviceParams);
-    await insertRow(pool, electricalQuery, airconditioningParams);
+    await insertRow(pool, networkQuery, networkParams);
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
-        const newFileName = generateImageFileName('NEPHO', newDeviceId, i + 1);
+    const fileFields = ['foto1', 'foto2', 'foto3'] as const;
+    const files = req.files as Record<
+      (typeof fileFields)[number],
+      Express.Multer.File[]
+    >;
+
+    for (const field of fileFields) {
+      if (files[field] && files[field][0]) {
+        const file = files[field][0];
+        const fileIndex = fileFields.indexOf(field) + 1;
+        const newFileName = generateImageFileName(
+          'NEPHO',
+          newDeviceId,
+          fileIndex,
+        );
         const newPath = path.join(
           __dirname,
           '../../src/images/network',
@@ -67,12 +89,34 @@ export const createRowNetwork = async (
 
         fs.renameSync(file.path, newPath);
 
-        const photoQuery = `INSERT INTO network_photo (asset_id, foto${i + 1}, created_at, user_id) VALUES (?, ?, ?, ?)`;
-        const photoParams = [newDeviceId, newFileName, now, req.body.user_id];
+        let photoQuery, photoParams;
+        const checkExistingQuery =
+          'SELECT * FROM network_photo WHERE asset_id = ?';
+        const [existingRows] = await connection.query<RowDataPacket[]>(
+          checkExistingQuery,
+          [newNetworkId],
+        );
+
+        if (existingRows.length > 0) {
+          // Update query
+          photoQuery = `UPDATE network_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoParams = [newFileName, now, req.body.user_id, newNetworkId];
+        } else {
+          // Insert query
+          photoQuery = `INSERT INTO network_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoParams = [newNetworkId, newFileName, now, req.body.user_id];
+        }
 
         await insertRow(pool, photoQuery, photoParams);
       }
     }
+
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Membuat ${newDeviceId}`,
+    });
+    await newTrail.save();
 
     res.status(201).json({ success: true });
   } catch (error) {
@@ -97,22 +141,24 @@ export const updateRowNetwork = async (
   res: Response,
   deviceTable: string,
   deviceColumns: string[],
-  airconditioningColumns: string[],
+  networkColumns: string[],
 ) => {
-  const { id } = req.query;
+  const { id, assetid } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   let connection;
-
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
   try {
     connection = await pool.getConnection();
-
     const deviceParams = [
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
       id,
     ];
-    const electricalParams = [
-      ...airconditioningColumns.map((col) => req.body[col] || null),
+    const networkParams = [
+      ...networkColumns.map((col) => req.body[col] || null),
       now,
       req.body.user_id,
       id,
@@ -130,18 +176,29 @@ export const updateRowNetwork = async (
     await updateARow(
       pool,
       `UPDATE network SET
-          ${airconditioningColumns.map((col) => (col === 'condition' ? `\`condition\` ` : col) + ` = ?`).join(', ')},
+          ${networkColumns.map((col) => col + ` = ?`).join(', ')},
           created_at = ?,
           user_id = ?
         WHERE device_id = ?`,
-      electricalParams,
+      networkParams,
     );
 
     // Menyimpan gambar jika ada
-    if (req.files && req.files instanceof Array) {
-      for (let i = 0; i < req.files.length; i++) {
-        const file = req.files[i];
-        const newFileName = generateImageFileName('NEPHO', id as string, i + 1);
+    const fileFields = ['foto1', 'foto2', 'foto3'] as const;
+    const files = req.files as Record<
+      (typeof fileFields)[number],
+      Express.Multer.File[]
+    >;
+
+    for (const field of fileFields) {
+      if (files[field] && files[field][0]) {
+        const file = files[field][0];
+        const fileIndex = fileFields.indexOf(field) + 1;
+        const newFileName = generateImageFileName(
+          'NEPHO',
+          id as string,
+          fileIndex,
+        );
         const newPath = path.join(
           __dirname,
           '../../src/images/network',
@@ -150,13 +207,33 @@ export const updateRowNetwork = async (
 
         fs.renameSync(file.path, newPath);
 
-        const photoQuery = `UPDATE network_photo SET foto${i + 1} = ?, updated_at = ? WHERE asset_id = ?`;
-        const photoParams = [newFileName, now, id];
+        let photoQuery, photoParams;
+        const checkExistingQuery =
+          'SELECT * FROM network_photo WHERE asset_id = ?';
+        const [existingRows] = await connection.query<RowDataPacket[]>(
+          checkExistingQuery,
+          [assetid],
+        );
 
-        await updateARow(pool, photoQuery, photoParams);
+        if (existingRows.length > 0) {
+          // Update query
+          photoQuery = `UPDATE network_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoParams = [newFileName, now, req.body.user_id, assetid];
+        } else {
+          // Insert query
+          photoQuery = `INSERT INTO network_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoParams = [assetid, newFileName, now, req.body.user_id];
+        }
+
+        await insertRow(pool, photoQuery, photoParams);
       }
     }
-
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Memperbaharui ${assetid}`,
+    });
+    await newTrail.save();
     res.status(200).json({ success: true });
   } catch (error) {
     console.error('Error updating device:', error);

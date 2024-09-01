@@ -6,29 +6,29 @@ import path from 'path';
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let uploadPath = path.join(__dirname, '../../src/images');
-    if (req.url.includes('electrical')) {
+    if (req.baseUrl.includes('electrical')) {
       uploadPath = path.join(uploadPath, '/electrical');
-    } else if (req.url.includes('airconditioning')) {
+    } else if (req.baseUrl.includes('airconditioning')) {
       uploadPath = path.join(uploadPath, '/air_conditioning');
-    } else if (req.url.includes('buildingfinishes')) {
+    } else if (req.baseUrl.includes('buildingfinishes')) {
       uploadPath = path.join(uploadPath, '/building_finishes');
-    } else if (req.url.includes('conveyance')) {
+    } else if (req.baseUrl.includes('conveyance')) {
       uploadPath = path.join(uploadPath, '/conveyance');
-    } else if (req.url.includes('extinguish')) {
+    } else if (req.baseUrl.includes('extinguish')) {
       uploadPath = path.join(uploadPath, '/extinguish');
-    } else if (req.url.includes('fluid')) {
+    } else if (req.baseUrl.includes('fluid')) {
       uploadPath = path.join(uploadPath, '/fluid');
-    } else if (req.url.includes('furniture')) {
+    } else if (req.baseUrl.includes('furniture')) {
       uploadPath = path.join(uploadPath, '/furniture');
-    } else if (req.url.includes('lighting')) {
+    } else if (req.baseUrl.includes('lighting')) {
       uploadPath = path.join(uploadPath, '/lighting');
-    } else if (req.url.includes('network')) {
+    } else if (req.baseUrl.includes('network')) {
       uploadPath = path.join(uploadPath, '/network');
-    } else if (req.url.includes('pump')) {
+    } else if (req.baseUrl.includes('pump')) {
       uploadPath = path.join(uploadPath, '/pump');
-    } else if (req.url.includes('safety')) {
+    } else if (req.baseUrl.includes('safety')) {
       uploadPath = path.join(uploadPath, '/safety');
-    } else if (req.url.includes('security')) {
+    } else if (req.baseUrl.includes('security')) {
       uploadPath = path.join(uploadPath, '/security');
     }
     cb(null, uploadPath);

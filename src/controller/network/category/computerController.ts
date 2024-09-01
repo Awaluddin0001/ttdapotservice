@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
 import { deleteCombinedRow } from '@/utils/deleteData';
-import {
-  getBigDeviceRows,
-  getBigDeviceRow,
-  getRowQuery,
-} from '@/utils/getData';
+import { getBigDeviceRows, getBigDeviceRow } from '@/utils/getData';
 import {
   createRowNetwork,
   updateRowNetwork,
@@ -198,6 +194,7 @@ export const createComputer = async (req: Request, res: Response) => {
     'installation_date',
     'notes',
     'user_id',
+    'sub_category_id',
   ];
   await createRowNetwork(
     req,
@@ -237,6 +234,7 @@ export const updateComputer = async (req: Request, res: Response) => {
     'installation_date',
     'notes',
     'user_id',
+    'sub_category_id',
   ];
   await updateRowNetwork(
     req,
