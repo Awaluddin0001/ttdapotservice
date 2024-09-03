@@ -9,7 +9,12 @@ import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allSecurityLink = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM security_link`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM security_link as cas`,
+  );
 };
 
 export const SecurityLink = async (req: Request, res: Response) => {

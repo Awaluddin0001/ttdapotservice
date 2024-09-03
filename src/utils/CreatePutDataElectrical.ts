@@ -228,7 +228,6 @@ export const createEntityDocument = async (
   const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
   const AuditTrailData = createAuditTrail(collectionName);
   try {
-    console.log(req.body);
     connection = await pool.getConnection();
     const newId = await getNewId(pool, tableName, prefix, 3);
     const newFileName = generateDocumentFileName(`${prefix}`, newId, 1);

@@ -58,11 +58,11 @@ import {
 } from '../controller/security/category/buttonController';
 
 import {
-  Detektor,
-  allDetektor,
-  createDetektor,
-  deleteDetektor,
-  updateDetektor,
+  Detector,
+  allDetector,
+  createDetector,
+  deleteDetector,
+  updateDetector,
 } from '../controller/security/category/detectorController';
 
 import {
@@ -72,6 +72,30 @@ import {
   deleteSound,
   updateSound,
 } from '../controller/security/category/soundController';
+import { allSecurity } from '@/controller/security/category/secuirtyController';
+import {
+  createSecurityBrand,
+  deleteSecurityBrand,
+  securityBrand,
+  securityBrands,
+  updateSecurityBrand,
+} from '@/controller/security/brand/securityBrandController';
+import {
+  createSecurityType,
+  deleteSecurityType,
+  securitySubCategories,
+  securityType,
+  securityTypes,
+  updateSecurityType,
+} from '@/controller/security/type/securityTypeController';
+import { uploadPdf } from '@/utils/pdfUpload';
+import {
+  allSecurityLink,
+  createSecurityLink,
+  deleteSecurityLink,
+  SecurityLink,
+  updateSecurityLink,
+} from '@/controller/security/link/securityLinkController';
 
 const security = Router();
 
@@ -82,12 +106,46 @@ security.post('/vendor', createsecurityVendor);
 security.put('/vendor', updatesecurityVendor);
 security.delete('/vendor', deletesecurityVendor);
 
+// brand security
+security.get('/brands', securityBrands);
+security.get('/brand', securityBrand);
+security.post('/brand', createSecurityBrand);
+security.put('/brand', updateSecurityBrand);
+security.delete('/brand', deleteSecurityBrand);
+
+// type security
+security.get('/types', securityTypes);
+security.get('/type', securityType);
+security.post('/type', createSecurityType);
+security.put('/type', updateSecurityType);
+security.delete('/type', deleteSecurityType);
+// sub category security
+security.get('/subcategories', securitySubCategories);
+
 // maintenance security
 security.get('/maintenances', allsecurityMaintenance);
 security.get('/maintenance', securityMaintenance);
-security.post('/maintenance', createMaintenancesecurity);
-security.put('/maintenance', updatesecurityMaintenance);
+security.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenancesecurity,
+);
+security.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updatesecurityMaintenance,
+);
 security.delete('/maintenance', deletesecurityMaintenance);
+
+// link security
+security.get('/links', allSecurityLink);
+security.get('/link', SecurityLink);
+security.post('/link', createSecurityLink);
+security.put('/link', updateSecurityLink);
+security.delete('/link', deleteSecurityLink);
+
+// security
+security.get('/all', allSecurity);
 
 // cctv
 security.get('/cctvs', allCctv);
@@ -165,19 +223,19 @@ security.put(
 security.delete('/button', deleteButton);
 
 // detektor
-security.get('/detektors', allDetektor);
-security.get('/detektor', Detektor);
+security.get('/detectors', allDetector);
+security.get('/detector', Detector);
 security.post(
-  '/detektor',
+  '/detector',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  createDetektor,
+  createDetector,
 );
 security.put(
-  '/detektor',
+  '/detector',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  updateDetektor,
+  updateDetector,
 );
-security.delete('/detektor', deleteDetektor);
+security.delete('/detector', deleteDetector);
 
 // sound
 security.get('/sounds', allSound);
