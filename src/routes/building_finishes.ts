@@ -32,38 +32,51 @@ import {
   deleteCeramic,
   updateCeramic,
 } from '../controller/finishing_building/category/ceramicController';
-
+import { allFinishing } from '@/controller/finishing_building/category/finishingController';
 import {
-  door,
-  alldoor,
-  createdoor,
-  deletedoor,
-  updatedoor,
-} from '../controller/finishing_building/category/doorController';
-
+  buildingFinishesBrand,
+  buildingFinishesBrands,
+  createBuildingFinishesBrand,
+  deleteBuildingFinishesBrand,
+  updateBuildingFinishesBrand,
+} from '@/controller/finishing_building/brand/finishingBrandController';
 import {
-  window,
-  allwindow,
-  createwindow,
-  deletewindow,
-  updatewindow,
-} from '../controller/finishing_building/category/windowController';
-
+  budildingSubCategories,
+  budildingType,
+  budildingTypes,
+  createBudildingType,
+  deleteBudildingType,
+  updateBudildingType,
+} from '@/controller/finishing_building/type/finishingTypeController';
+import { uploadPdf } from '@/utils/pdfUpload';
 import {
-  wallpaper,
-  allwallpaper,
-  createwallpaper,
-  deletewallpaper,
-  updatewallpaper,
-} from '../controller/finishing_building/category/wallpaperController';
-
+  allDoor,
+  createDoor,
+  deleteDoor,
+  Door,
+  updateDoor,
+} from '@/controller/finishing_building/category/doorController';
 import {
-  mebel,
-  allmebel,
-  createmebel,
-  deletemebel,
-  updatemebel,
-} from '../controller/finishing_building/category/mebelController';
+  allWindow,
+  createWindow,
+  deleteWindow,
+  updateWindow,
+  Window,
+} from '@/controller/finishing_building/category/windowController';
+import {
+  allWallpaper,
+  createWallpaper,
+  deleteWallpaper,
+  updateWallpaper,
+  Wallpaper,
+} from '@/controller/finishing_building/category/wallpaperController';
+import {
+  allMebel,
+  createMebel,
+  deleteMebel,
+  Mebel,
+  updateMebel,
+} from '@/controller/finishing_building/category/mebelController';
 
 const building_finishes = Router();
 
@@ -74,12 +87,36 @@ building_finishes.post('/vendor', createbuildingfinishesVendor);
 building_finishes.put('/vendor', updatebuildingfinishesVendor);
 building_finishes.delete('/vendor', deletebuildingfinishesVendor);
 
+// brand security
+building_finishes.get('/brands', buildingFinishesBrands);
+building_finishes.get('/brand', buildingFinishesBrand);
+building_finishes.post('/brand', createBuildingFinishesBrand);
+building_finishes.put('/brand', updateBuildingFinishesBrand);
+building_finishes.delete('/brand', deleteBuildingFinishesBrand);
+// brand security
+building_finishes.get('/types', budildingTypes);
+building_finishes.get('/type', budildingType);
+building_finishes.post('/type', createBudildingType);
+building_finishes.put('/type', updateBudildingType);
+building_finishes.delete('/type', deleteBudildingType);
+building_finishes.get('/subcategories', budildingSubCategories);
+
 // maintenance security
 building_finishes.get('/maintenances', allbuildingfinisherMaintenance);
 building_finishes.get('/maintenance', buildingfinisherMaintenance);
-building_finishes.post('/maintenance', createMaintenancebuildingfinisher);
-building_finishes.put('/maintenance', updatebuildingfinisherMaintenance);
+building_finishes.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenancebuildingfinisher,
+);
+building_finishes.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updatebuildingfinisherMaintenance,
+);
 building_finishes.delete('/maintenance', deletebuildingfinisherMaintenance);
+
+building_finishes.get('/all', allFinishing);
 
 // ceiling
 building_finishes.get('/ceilings', allCeiling);
@@ -112,63 +149,63 @@ building_finishes.put(
 building_finishes.delete('/ceramic', deleteCeramic);
 
 // door
-building_finishes.get('/doors', alldoor);
-building_finishes.get('/door', door);
+building_finishes.get('/doors', allDoor);
+building_finishes.get('/door', Door);
 building_finishes.post(
   '/door',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  createdoor,
+  createDoor,
 );
 building_finishes.put(
   '/door',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  updatedoor,
+  updateDoor,
 );
-building_finishes.delete('/door', deletedoor);
+building_finishes.delete('/door', deleteDoor);
 
 // window
-building_finishes.get('/windows', allwindow);
-building_finishes.get('/window', window);
+building_finishes.get('/windows', allWindow);
+building_finishes.get('/window', Window);
 building_finishes.post(
   '/window',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  createwindow,
+  createWindow,
 );
 building_finishes.put(
   '/window',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  updatewindow,
+  updateWindow,
 );
-building_finishes.delete('/window', deletewindow);
+building_finishes.delete('/window', deleteWindow);
 
 // wallpaper
-building_finishes.get('/wallpapers', allwallpaper);
-building_finishes.get('/wallpaper', wallpaper);
+building_finishes.get('/wallpapers', allWallpaper);
+building_finishes.get('/wallpaper', Wallpaper);
 building_finishes.post(
   '/wallpaper',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  createwallpaper,
+  createWallpaper,
 );
 building_finishes.put(
   '/wallpaper',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  updatewallpaper,
+  updateWallpaper,
 );
-building_finishes.delete('/wallpaper', deletewallpaper);
+building_finishes.delete('/wallpaper', deleteWallpaper);
 
 // mebel
-building_finishes.get('/mebels', allmebel);
-building_finishes.get('/mebel', mebel);
+building_finishes.get('/mebels', allMebel);
+building_finishes.get('/mebel', Mebel);
 building_finishes.post(
   '/mebel',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  createmebel,
+  createMebel,
 );
 building_finishes.put(
   '/mebel',
   upload.fields([{ name: 'foto1' }, { name: 'foto2' }, { name: 'foto3' }]),
-  updatemebel,
+  updateMebel,
 );
-building_finishes.delete('/mebel', deletemebel);
+building_finishes.delete('/mebel', deleteMebel);
 
 export default building_finishes;

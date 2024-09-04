@@ -52,7 +52,10 @@ import {
   createAirConditioningType,
   deleteAirConditioningType,
   updateAirConditioningType,
+  airConditioningSubCategories,
 } from '@/controller/air_conditioning/type/airConditioningTypeController';
+import { allAirconditioning } from '@/controller/air_conditioning/category/airConditioningController';
+import { uploadPdf } from '@/utils/pdfUpload';
 
 const ac = Router();
 
@@ -66,8 +69,16 @@ ac.delete('/vendor', deleteairconditioningVendor);
 // maintenance ac
 ac.get('/maintenances', allairconditioningMaintenance);
 ac.get('/maintenance', airconditioningMaintenance);
-ac.post('/maintenance', createMaintenanceairconditioning);
-ac.put('/maintenance', updateairconditioningMaintenance);
+ac.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenanceairconditioning,
+);
+ac.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updateairconditioningMaintenance,
+);
 ac.delete('/maintenance', deleteairconditioningMaintenance);
 
 // brand ac
@@ -83,6 +94,12 @@ ac.get('/type', airConditioningType);
 ac.post('/type', createAirConditioningType);
 ac.put('/type', updateAirConditioningType);
 ac.delete('/type', deleteAirConditioningType);
+
+// subcategories
+ac.get('/subcategories', airConditioningSubCategories);
+
+// electrical
+ac.get('/all', allAirconditioning);
 
 // air
 ac.get('/airs', allAir);

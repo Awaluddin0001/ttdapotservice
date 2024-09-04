@@ -5,7 +5,12 @@ import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allairconditioningVendor = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM air_conditioning_vendor`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM air_conditioning_vendor as cas`,
+  );
 };
 
 export const airconditioningVendor = async (req: Request, res: Response) => {

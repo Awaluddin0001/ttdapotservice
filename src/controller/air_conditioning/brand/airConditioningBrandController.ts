@@ -5,11 +5,21 @@ import { getRowQuery } from '@/utils/getData';
 import { Request, Response } from 'express';
 
 export const airConditioningBrands = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM air_brand`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM air_conditioning_brand as cas`,
+  );
 };
 
 export const airConditioningBrand = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM air_brand WHERE id = ?`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM air_conditioning_brand WHERE id = ?`,
+  );
 };
 
 export const createAirConditioningBrand = async (
@@ -17,7 +27,7 @@ export const createAirConditioningBrand = async (
   res: Response,
 ) => {
   const columns = ['name'];
-  await createEntity(req, res, 'air_brand', 'ACARA', columns);
+  await createEntity(req, res, 'air_conditioning_brand', 'ACARA', columns);
 };
 
 export const updateAirConditioningBrand = async (
@@ -25,12 +35,17 @@ export const updateAirConditioningBrand = async (
   res: Response,
 ) => {
   const columns = ['name'];
-  await updateEntity(req, res, 'air_brand', columns);
+  await updateEntity(req, res, 'air_conditioning_brand', columns);
 };
 
 export const deleteAirConditioningBrand = async (
   req: Request,
   res: Response,
 ) => {
-  await deleteRow(req, res, pool, `DELETE FROM air_brand WHERE id = ?`);
+  await deleteRow(
+    req,
+    res,
+    pool,
+    `DELETE FROM air_conditioning_brand WHERE id = ?`,
+  );
 };
