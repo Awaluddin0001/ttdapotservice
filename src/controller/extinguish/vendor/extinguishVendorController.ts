@@ -9,11 +9,16 @@ import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allextinguishVendor = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM extinguish_vendor`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM extinguish_vendor as cas`,
+  );
 };
 
 export const extinguishVendor = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,

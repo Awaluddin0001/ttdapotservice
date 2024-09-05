@@ -24,6 +24,7 @@ import {
   deleteLighting,
   updateLighting,
 } from '../controller/lighting/category/lightingController';
+import { uploadPdf } from '@/utils/pdfUpload';
 
 const lighting = Router();
 
@@ -37,8 +38,16 @@ lighting.delete('/vendor', deleteLightVendor);
 // maintenance security
 lighting.get('/maintenances', alllightingMaintenance);
 lighting.get('/maintenance', lightingMaintenance);
-lighting.post('/maintenance', createMaintenancelighting);
-lighting.put('/maintenance', updatelightingMaintenance);
+lighting.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenancelighting,
+);
+lighting.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updatelightingMaintenance,
+);
 lighting.delete('/maintenance', deletelightingMaintenance);
 
 // lighting

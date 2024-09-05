@@ -141,6 +141,35 @@ export const queryBigDevice = (
 };
 
 export const queryBigAsset = (categoryName: string, newColumnsCa: string[]) => {
+  if (categoryName === 'extinguish') {
+    return `SELECT 
+    ca.id as asset_id,
+    DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
+    ca.user_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCa.join(', ')}
+  FROM ${categoryName} ca
+  LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+  LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+  LEFT JOIN user u ON ca.user_id = u.id
+  LEFT JOIN room rm ON ca.room_id = rm.id
+  LEFT JOIN floor fl ON ca.floor_id = fl.id
+  LEFT JOIN site st ON ca.site_id = st.id
+  WHERE 1=1`;
+  }
   return `SELECT 
     ca.id as asset_id,
     DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
@@ -207,6 +236,70 @@ export const queryBigNetwork = (
   LEFT JOIN floor fl ON ca.floor_id = fl.id
   LEFT JOIN site st ON ca.site_id = st.id
   WHERE 1=1`;
+};
+
+export const querySmallAsset = (
+  categoryName: string,
+  newColumnsCa: string[],
+  newJoin?: string[] | null,
+) => {
+  if (newJoin) {
+    return `SELECT 
+    ca.id as asset_id,
+    DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
+    ca.user_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCa.join(', ')}
+  FROM ${categoryName} ca
+  LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+  LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+  LEFT JOIN user u ON ca.user_id = u.id
+  LEFT JOIN room rm ON ca.room_id = rm.id
+  LEFT JOIN floor fl ON ca.floor_id = fl.id
+  LEFT JOIN site st ON ca.site_id = st.id
+  ${newJoin.join(' ')}
+  WHERE 1=1`;
+  }
+  return `SELECT 
+    ca.id as asset_id,
+    DATE_FORMAT(ca.created_at, "%Y-%m-%d") AS created_at,
+    ca.user_id,
+    ca.site_id as site_id,
+    ca.floor_id as floor_id,
+    ca.room_id as room_id,
+    DATE_FORMAT(ca.installation_date, "%Y-%m-%d") AS installation_date, 
+    ca.maintenance_id as maintenance_id,
+    ca.notes as notes,
+    DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+    rm.name as room_name,
+    fl.name as floor_name,
+    st.name as site_name,
+    u.name AS user_name,
+    ep.foto1 AS photo1,
+    ep.foto2 AS photo2,
+    ep.foto3 AS photo3,
+    ${newColumnsCa.join(', ')}
+    FROM ${categoryName} ca
+    LEFT JOIN ${categoryName}_maintenance m ON ca.maintenance_id = m.id
+    LEFT JOIN ${categoryName}_photo ep ON ca.id = ep.asset_id
+    LEFT JOIN user u ON ca.user_id = u.id
+    LEFT JOIN room rm ON ca.room_id = rm.id
+    LEFT JOIN floor fl ON ca.floor_id = fl.id
+    LEFT JOIN site st ON ca.site_id = st.id
+    WHERE 1=1`;
 };
 
 export const globalFilterDevice = (

@@ -1,11 +1,21 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import { getBigDeviceRow, getRowQuery } from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { getRowQuery } from '@/utils/getData';
+import { deleteRow, deleteRowDocument } from '@/utils/deleteData';
+import {
+  createEntity,
+  createEntityDocument,
+  updateEntity,
+  updateEntityDocument,
+} from '@/utils/CreatePutDataElectrical';
 
 export const allconveyanceMaintenance = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM maintenance_conveyance`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM conveyance_maintenance as cas`,
+  );
 };
 
 export const conveyanceMaintenance = async (req: Request, res: Response) => {
@@ -13,7 +23,7 @@ export const conveyanceMaintenance = async (req: Request, res: Response) => {
     req,
     res,
     pool,
-    `SELECT * FROM maintenance_conveyance WHERE id = ?`,
+    `SELECT * FROM conveyance_maintenance WHERE id = ?`,
   );
 };
 
@@ -21,11 +31,11 @@ export const deleteconveyanceMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await deleteRow(
+  await deleteRowDocument(
     req,
     res,
     pool,
-    `DELETE FROM maintenance_conveyance WHERE id = ?`,
+    `DELETE FROM conveyance_maintenance WHERE id = ?`,
   );
 };
 
@@ -33,14 +43,20 @@ export const createMaintenanceconveyance = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await createEntity(req, res, 'maintenance_conveyance', 'COMAI', columns);
+  const columns = [`activity`];
+  await createEntityDocument(
+    req,
+    res,
+    'conveyance_maintenance',
+    'COMAI',
+    columns,
+  );
 };
 
 export const updateconveyanceMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await updateEntity(req, res, 'maintenance_conveyance', columns);
+  const columns = [`activity`];
+  await updateEntityDocument(req, res, 'conveyance_maintenance', columns);
 };

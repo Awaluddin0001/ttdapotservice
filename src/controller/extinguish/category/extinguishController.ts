@@ -5,6 +5,7 @@ import {
   getBigDeviceRows,
   getBigDeviceRow,
   getRowQuery,
+  getBigAssetRows,
 } from '@/utils/getData';
 import {
   createEntity,
@@ -14,6 +15,21 @@ import {
 } from '@/utils/CreatePutDataElectrical';
 
 export const allExtinguish = async (req: Request, res: Response) => {
+  await getBigAssetRows(
+    req,
+    res,
+    pool,
+    [
+      `ca.ne_id as ne_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `ca.device_id`,
+    ],
+    `extinguish`,
+  );
+};
+
+export const Extinguishs = async (req: Request, res: Response) => {
   await getRowQuery(
     req,
     res,

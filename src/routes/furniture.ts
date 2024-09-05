@@ -1,12 +1,5 @@
 import { Router } from 'express';
 import { upload } from '@/utils/imageUpload';
-import {
-  FurnitureVendor,
-  allFurnitureVendor,
-  createFurnitureVendor,
-  deleteFurnitureVendor,
-  updateFurnitureVendor,
-} from '../controller/furniture/vendor/furnitureVendorController';
 
 import {
   allFurniture,
@@ -15,15 +8,35 @@ import {
   deleteFurniture,
   updateFurniture,
 } from '../controller/furniture/category/furnitureController';
+import {
+  allfurnitureVendor,
+  createfurnitureVendor,
+  deletefurnitureVendor,
+  furnitureVendor,
+  updatefurnitureVendor,
+} from '@/controller/furniture/vendor/furnitureVendorController';
+import {
+  createFurnitureBrand,
+  deleteFurnitureBrand,
+  furnitureBrand,
+  furnitureBrands,
+  updateFurnitureBrand,
+} from '@/controller/furniture/brand/furnitureBrandController';
 
 const furniture = Router();
 
 // vendor rectifier
-furniture.get('/vendors', allFurnitureVendor);
-furniture.get('/vendor', FurnitureVendor);
-furniture.post('/vendor', createFurnitureVendor);
-furniture.put('/vendor', updateFurnitureVendor);
-furniture.delete('/vendor', deleteFurnitureVendor);
+furniture.get('/vendors', allfurnitureVendor);
+furniture.get('/vendor', furnitureVendor);
+furniture.post('/vendor', createfurnitureVendor);
+furniture.put('/vendor', updatefurnitureVendor);
+furniture.delete('/vendor', deletefurnitureVendor);
+// brand rectifier
+furniture.get('/brands', furnitureBrands);
+furniture.get('/brand', furnitureBrand);
+furniture.post('/brand', createFurnitureBrand);
+furniture.put('/brand', updateFurnitureBrand);
+furniture.delete('/brand', deleteFurnitureBrand);
 
 // rackserver
 furniture.get('/furnitures', allFurniture);

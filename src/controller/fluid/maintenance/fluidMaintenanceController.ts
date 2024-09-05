@@ -5,32 +5,47 @@ import {
   getBigDeviceRow,
   getRowQuery,
 } from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { deleteRow, deleteRowDocument } from '@/utils/deleteData';
+import {
+  createEntity,
+  createEntityDocument,
+  updateEntity,
+  updateEntityDocument,
+} from '@/utils/CreatePutDataElectrical';
 
-export const allFluidMaintenance = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM maintenance_fluid`);
-};
-
-export const fluidMaintenance = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+export const allfluidMaintenance = async (req: Request, res: Response) => {
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM maintenance_fluid WHERE id = ?`,
+    `SELECT cas.*, u.name as user_name FROM fluid_maintenance as cas`,
   );
 };
 
-export const deleteFluidMaintenance = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM maintenance_fluid WHERE id = ?`);
+export const fluidMaintenance = async (req: Request, res: Response) => {
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM fluid_maintenance WHERE id = ?`,
+  );
 };
 
-export const createMaintenanceFluid = async (req: Request, res: Response) => {
-  const columns = [`activity`, `document_name`];
-  await createEntity(req, res, 'maintenance_fluid', 'FTMAI', columns);
+export const deletefluidMaintenance = async (req: Request, res: Response) => {
+  await deleteRowDocument(
+    req,
+    res,
+    pool,
+    `DELETE FROM fluid_maintenance WHERE id = ?`,
+  );
 };
 
-export const updateFluidMaintenance = async (req: Request, res: Response) => {
-  const columns = [`activity`, `document_name`];
-  await updateEntity(req, res, 'maintenance_fluid', columns);
+export const createMaintenancefluid = async (req: Request, res: Response) => {
+  const columns = [`activity`];
+  await createEntityDocument(req, res, 'fluid_maintenance', 'FLMAI', columns);
+};
+
+export const updatefluidMaintenance = async (req: Request, res: Response) => {
+  const columns = [`activity`];
+  await updateEntityDocument(req, res, 'fluid_maintenance', columns);
 };

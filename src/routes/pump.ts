@@ -24,6 +24,7 @@ import {
   deletePump,
   updatePump,
 } from '../controller/pump/category/pumpController';
+import { uploadPdf } from '@/utils/pdfUpload';
 
 const pump = Router();
 
@@ -37,8 +38,16 @@ pump.delete('/vendor', deletepumpVendor);
 // maintenance security
 pump.get('/maintenances', allpumpMaintenance);
 pump.get('/maintenance', pumpMaintenance);
-pump.post('/maintenance', createMaintenancepump);
-pump.put('/maintenance', updatepumpMaintenance);
+pump.post(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  createMaintenancepump,
+);
+pump.put(
+  '/maintenance',
+  uploadPdf.single('document_name'),
+  updatepumpMaintenance,
+);
 pump.delete('/maintenance', deletepumpMaintenance);
 
 // pump

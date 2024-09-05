@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import {
-  getBigDeviceRows,
-  getBigDeviceRow,
-  getRowQuery,
-} from '@/utils/getData';
+import { getRowQuery } from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 

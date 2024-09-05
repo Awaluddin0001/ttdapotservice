@@ -9,6 +9,7 @@ import {
   queryBigDevice,
   queryBigNetwork,
   queryPage,
+  querySmallAsset,
 } from '@/utils/idManipulation';
 
 // for table category number #1 rows
@@ -271,6 +272,7 @@ export const getSmallAssetRows = async (
   pool: Pool,
   newColumnsCa: string[],
   categoryName: string,
+  newJoin?: string[] | null,
 ) => {
   let connection;
   try {
@@ -279,7 +281,7 @@ export const getSmallAssetRows = async (
     const { globalFilter } = req.query;
     const { page, limit, offset } = queryPage(req);
 
-    const query = queryBigAsset(categoryName, newColumnsCa);
+    const query = querySmallAsset(categoryName, newColumnsCa, newJoin);
 
     // Base query
     let filterQuery = query;
@@ -360,7 +362,7 @@ export const getSmallAssetRow = async (
     connection = await pool.getConnection();
     const [rows] = await connection.query<RowDataPacket[]>(query, [id]);
     if (rows.length === 0) {
-      return res.status(404).send('Rectifier not found');
+      return res.status(404).send('Asset not found');
     }
     const formattedRows = rows.map((row: any) => ({
       ...row,

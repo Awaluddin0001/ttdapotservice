@@ -5,19 +5,29 @@ import {
   getBigDeviceRow,
   getRowQuery,
 } from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { deleteRow, deleteRowDocument } from '@/utils/deleteData';
+import {
+  createEntity,
+  createEntityDocument,
+  updateEntity,
+  updateEntityDocument,
+} from '@/utils/CreatePutDataElectrical';
 
 export const allextinguishMaintenance = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM maintenance_extinguish`);
-};
-
-export const extinguishMaintenance = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM maintenance_extinguish WHERE id = ?`,
+    `SELECT cas.*, u.name as user_name FROM extinguish_maintenance as cas`,
+  );
+};
+
+export const extinguishMaintenance = async (req: Request, res: Response) => {
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM extinguish_maintenance WHERE id = ?`,
   );
 };
 
@@ -25,11 +35,11 @@ export const deleteextinguishMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await deleteRow(
+  await deleteRowDocument(
     req,
     res,
     pool,
-    `DELETE FROM maintenance_extinguish WHERE id = ?`,
+    `DELETE FROM extinguish_maintenance WHERE id = ?`,
   );
 };
 
@@ -37,14 +47,20 @@ export const createMaintenanceextinguish = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await createEntity(req, res, 'maintenance_extinguish', 'EXMAI', columns);
+  const columns = [`activity`];
+  await createEntityDocument(
+    req,
+    res,
+    'extinguish_maintenance',
+    'EXMAI',
+    columns,
+  );
 };
 
 export const updateextinguishMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await updateEntity(req, res, 'maintenance_extinguish', columns);
+  const columns = [`activity`];
+  await updateEntityDocument(req, res, 'extinguish_maintenance', columns);
 };

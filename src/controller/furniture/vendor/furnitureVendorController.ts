@@ -8,12 +8,17 @@ import {
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
-export const allFurnitureVendor = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM furniture_vendor`);
+export const allfurnitureVendor = async (req: Request, res: Response) => {
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT cas.*, u.name as user_name FROM furniture_vendor as cas`,
+  );
 };
 
-export const FurnitureVendor = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+export const furnitureVendor = async (req: Request, res: Response) => {
+  await getRowQuery(
     req,
     res,
     pool,
@@ -21,16 +26,16 @@ export const FurnitureVendor = async (req: Request, res: Response) => {
   );
 };
 
-export const deleteFurnitureVendor = async (req: Request, res: Response) => {
+export const deletefurnitureVendor = async (req: Request, res: Response) => {
   await deleteRow(req, res, pool, `DELETE FROM furniture_vendor WHERE id = ?`);
 };
 
-export const createFurnitureVendor = async (req: Request, res: Response) => {
+export const createfurnitureVendor = async (req: Request, res: Response) => {
   const columns = [`company`, `company_user_name`, `number_phone`];
   await createEntity(req, res, 'furniture_vendor', 'FUVEN', columns);
 };
 
-export const updateFurnitureVendor = async (req: Request, res: Response) => {
+export const updatefurnitureVendor = async (req: Request, res: Response) => {
   const columns = [`company`, `company_user_name`, `number_phone`];
   await updateEntity(req, res, 'furniture_vendor', columns);
 };
