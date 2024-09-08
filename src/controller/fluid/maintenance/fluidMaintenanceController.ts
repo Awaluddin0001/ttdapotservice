@@ -18,7 +18,7 @@ export const allfluidMaintenance = async (req: Request, res: Response) => {
     req,
     res,
     pool,
-    `SELECT cas.*, u.name as user_name FROM fluid_maintenance as cas`,
+    `SELECT cas.*, u.name as user_name FROM fluid_tank_maintenance as cas`,
   );
 };
 
@@ -27,7 +27,7 @@ export const fluidMaintenance = async (req: Request, res: Response) => {
     req,
     res,
     pool,
-    `SELECT * FROM fluid_maintenance WHERE id = ?`,
+    `SELECT * FROM fluid_tank_maintenance WHERE id = ?`,
   );
 };
 
@@ -36,16 +36,22 @@ export const deletefluidMaintenance = async (req: Request, res: Response) => {
     req,
     res,
     pool,
-    `DELETE FROM fluid_maintenance WHERE id = ?`,
+    `DELETE FROM fluid_tank_maintenance WHERE id = ?`,
   );
 };
 
 export const createMaintenancefluid = async (req: Request, res: Response) => {
   const columns = [`activity`];
-  await createEntityDocument(req, res, 'fluid_maintenance', 'FLMAI', columns);
+  await createEntityDocument(
+    req,
+    res,
+    'fluid_tank_maintenance',
+    'FLMAI',
+    columns,
+  );
 };
 
 export const updatefluidMaintenance = async (req: Request, res: Response) => {
   const columns = [`activity`];
-  await updateEntityDocument(req, res, 'fluid_maintenance', columns);
+  await updateEntityDocument(req, res, 'fluid_tank_maintenance', columns);
 };

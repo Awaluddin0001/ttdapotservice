@@ -19,7 +19,7 @@ export const safetyBrand = async (req: Request, res: Response) => {
 
 export const createSafetyBrand = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await createEntity(req, res, 'safety_brand', 'EXRBA', columns);
+  await createEntity(req, res, 'safety_brand', 'SABRA', columns);
 };
 
 export const updateSafetyBrand = async (req: Request, res: Response) => {

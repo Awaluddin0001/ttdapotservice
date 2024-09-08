@@ -1,24 +1,20 @@
 import { Request, Response } from 'express';
 import pool from '@/config/mySql';
-import {
-  getBigDeviceRows,
-  getBigDeviceRow,
-  getRowQuery,
-} from '@/utils/getData';
+import { getRowQuery } from '@/utils/getData';
 import { deleteRow } from '@/utils/deleteData';
 import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
 
 export const allpumpVendor = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM pump_vendor`);
-};
-
-export const pumpVendor = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM pump_vendor WHERE id = ?`,
+    `SELECT cas.*, u.name as user_name FROM pump_vendor as cas`,
   );
+};
+
+export const pumpVendor = async (req: Request, res: Response) => {
+  await getRowQuery(req, res, pool, `SELECT * FROM pump_vendor WHERE id = ?`);
 };
 
 export const deletepumpVendor = async (req: Request, res: Response) => {

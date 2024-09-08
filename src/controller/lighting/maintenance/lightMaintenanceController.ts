@@ -5,19 +5,29 @@ import {
   getBigDeviceRow,
   getRowQuery,
 } from '@/utils/getData';
-import { deleteRow } from '@/utils/deleteData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { deleteRow, deleteRowDocument } from '@/utils/deleteData';
+import {
+  createEntity,
+  createEntityDocument,
+  updateEntity,
+  updateEntityDocument,
+} from '@/utils/CreatePutDataElectrical';
 
 export const alllightingMaintenance = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM maintenance_lighting`);
-};
-
-export const lightingMaintenance = async (req: Request, res: Response) => {
-  await getBigDeviceRow(
+  await getRowQuery(
     req,
     res,
     pool,
-    `SELECT * FROM maintenance_lighting WHERE id = ?`,
+    `SELECT cas.*, u.name as user_name FROM lighting_maintenance as cas`,
+  );
+};
+
+export const lightingMaintenance = async (req: Request, res: Response) => {
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM lighting_maintenance WHERE id = ?`,
   );
 };
 
@@ -25,11 +35,11 @@ export const deletelightingMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  await deleteRow(
+  await deleteRowDocument(
     req,
     res,
     pool,
-    `DELETE FROM maintenance_lighting WHERE id = ?`,
+    `DELETE FROM lighting_maintenance WHERE id = ?`,
   );
 };
 
@@ -37,14 +47,20 @@ export const createMaintenancelighting = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await createEntity(req, res, 'maintenance_lighting', 'LIMAI', columns);
+  const columns = [`activity`];
+  await createEntityDocument(
+    req,
+    res,
+    'lighting_maintenance',
+    'FLMAI',
+    columns,
+  );
 };
 
 export const updatelightingMaintenance = async (
   req: Request,
   res: Response,
 ) => {
-  const columns = [`activity`, `document_name`];
-  await updateEntity(req, res, 'maintenance_lighting', columns);
+  const columns = [`activity`];
+  await updateEntityDocument(req, res, 'lighting_maintenance', columns);
 };

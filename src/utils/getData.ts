@@ -245,19 +245,28 @@ export const getBigDeviceRow = async (
     if (rows.length === 0) {
       return res.status(404).send('Rectifier not found');
     }
-    const formattedRows = rows.map((row: any) => ({
-      ...row,
-      installation_date: format(
-        new Date(row.installation_date),
-        'dd-MMMM-yyyy',
-      ),
-      created_at: format(new Date(row.created_at), 'dd-MMMM-yyyy'),
-      maintenance_date: row.maintenance_date
-        ? format(new Date(row.maintenance_date), 'dd-MMMM-yyyy')
-        : '-',
-    }));
+    if (rows[0].installation_date || rows[0].maintenance_date) {
+      const formattedRows = rows.map((row: any) => ({
+        ...row,
+        installation_date: format(
+          new Date(row.installation_date),
+          'dd-MMMM-yyyy',
+        ),
+        created_at: format(new Date(row.created_at), 'dd-MMMM-yyyy'),
+        maintenance_date: row.maintenance_date
+          ? format(new Date(row.maintenance_date), 'dd-MMMM-yyyy')
+          : '-',
+      }));
 
-    res.json(formattedRows[0]);
+      res.json(formattedRows[0]);
+    } else {
+      const formattedRows = rows.map((row: any) => ({
+        ...row,
+        created_at: format(new Date(row.created_at), 'dd-MMMM-yyyy'),
+      }));
+
+      res.json(formattedRows[0]);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

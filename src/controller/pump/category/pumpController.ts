@@ -5,33 +5,105 @@ import {
   getBigDeviceRows,
   getBigDeviceRow,
   getRowQuery,
+  getBigAssetRows,
+  getSmallAssetRows,
 } from '@/utils/getData';
-import { createEntity, updateEntity } from '@/utils/CreatePutDataElectrical';
+import { exportBigDeviceRows } from '@/utils/exportData';
 import { createRowPump, updateRowPump } from '@/utils/CreatePutDataPump';
 
 export const allPump = async (req: Request, res: Response) => {
-  await getRowQuery(
+  await getSmallAssetRows(
     req,
     res,
     pool,
-    `SELECT 
-          r.*, 
-          b.name AS brand_name, 
-          v.company AS vendor_name, 
-          u.name AS user_name,
-                    ep.foto1 AS photo1,
-          ep.foto2 AS photo2,
-          ep.foto3 AS photo3,
-          DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM pump_device r
-    LEFT JOIN pump_brand b ON r.brand_id = b.id
-    LEFT JOIN pump_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_pump m ON r.maintenance_id = m.id
-        LEFT JOIN pump el ON r.id = el.device_id
-    LEFT JOIN pump_photo ep ON el.id = ep.asset_id`,
+    [
+      `ca.amount as amount`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `ca.device_id`,
+      `t.name`,
+      `t.model`,
+      `t.water_flow`,
+      `t.power`,
+    ],
+    `pump`,
+    [
+      `LEFT JOIN pump_device t ON ca.device_id = t.id`,
+      `LEFT JOIN pump_brand b ON t.brand_id = b.id`,
+      `LEFT JOIN pump_vendor v ON t.vendor_id = v.id`,
+    ],
+  );
+};
+
+export const Pumps = async (req: Request, res: Response) => {
+  await getSmallAssetRows(
+    req,
+    res,
+    pool,
+    [
+      `ca.status as status`,
+      `ca.condition_asset`,
+      `ca.amount as amount`,
+      `b.name as brand_name`,
+      `v.company AS vendor_name`,
+      `d.id as id`,
+      `d.name as name`,
+      `d.model as model`,
+      `d.water_flow as water_flow`,
+      `d.power as power`,
+    ],
+    `pump`,
+    [
+      `LEFT JOIN pump_device d ON ca.device_id = d.id`,
+      `LEFT JOIN pump_brand b ON d.brand_id = b.id`,
+      `LEFT JOIN pump_vendor v ON d.vendor_id = v.id`,
+    ],
+  );
+};
+
+export const exportPumpCsv = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.brand_id`,
+      `cas.name`,
+      `cas.model`,
+      `cas.water_flow`,
+      `cas.power`,
+      `cas.warranty`,
+      `b.name AS brand_name`,
+      `ca.ne_id as ne_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+    ],
+    `pump`,
+    `pump_device`,
+    `csv`,
+    [`LEFT JOIN pump_brand b ON cas.brand_id = b.id`],
+  );
+};
+export const exportPumpXlsx = async (req: Request, res: Response) => {
+  await exportBigDeviceRows(
+    req,
+    res,
+    pool,
+    [
+      `cas.brand_id`,
+      `cas.name`,
+      `cas.model`,
+      `cas.water_flow`,
+      `cas.power`,
+      `b.name AS brand_name`,
+      `ca.ne_id as ne_id`,
+      `ca.status as status`,
+      `ca.condition_asset`,
+    ],
+    `pump`,
+    `pump_device`,
+    `xlsx`,
+    [`LEFT JOIN pump_brand b ON cas.brand_id = b.id`],
   );
 };
 
@@ -41,23 +113,47 @@ export const Pump = async (req: Request, res: Response) => {
     res,
     pool,
     `SELECT 
-          r.*, 
-          b.name AS brand_name, 
-          v.company AS vendor_name, 
-          u.name AS user_name,
-                    ep.foto1 AS photo1,
-          ep.foto2 AS photo2,
-          ep.foto3 AS photo3,
-          DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
-          DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
-          DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at
-    FROM pump_device r
-    LEFT JOIN pump_brand b ON r.brand_id = b.id
-    LEFT JOIN pump_vendor v ON r.vendor_id = v.id
-    LEFT JOIN user u ON r.user_id = u.id
-    LEFT JOIN maintenance_pump m ON r.maintenance_id = m.id
-        LEFT JOIN pump el ON r.id = el.device_id
-    LEFT JOIN pump_photo ep ON el.id = ep.asset_id
+        d.vendor_id,
+        d.brand_id,
+        d.name,
+        d.model,
+        d.water_flow,
+        d.power,
+        DATE_FORMAT(r.installation_date, "%Y-%m-%d") AS installation_date, 
+        DATE_FORMAT(r.created_at, "%Y-%m-%d") AS created_at,
+        DATE_FORMAT(m.maintenance_date, "%Y-%m-%d") AS maintenance_date,
+        m.activity AS maintenance_activity,
+        m.document_name AS maintenance_document,
+        b.name AS brand_name, 
+        v.company AS vendor_name, 
+        v.company_user_name AS vendor_user_name, 
+        v.number_phone AS vendor_phone,
+        u.name AS user_name,
+        ep.foto1 AS photo1,
+        ep.foto2 AS photo2,
+        ep.foto3 AS photo3,
+        r.id as id,
+        d.id as asset_id,
+        r.amount as amount,
+        r.site_id as site_id,
+        r.floor_id as floor_id,
+        r.room_id as room_id,
+        r.status as status,
+        r.condition_asset,
+        r.notes as notes,
+        rm.name as room_name,
+        fl.name as floor_name,
+        st.name as site_name
+      FROM pump r
+      LEFT JOIN pump_device d ON r.device_id = d.id
+      LEFT JOIN pump_brand b ON d.brand_id = b.id
+      LEFT JOIN pump_vendor v ON d.vendor_id = v.id
+      LEFT JOIN user u ON r.user_id = u.id
+      LEFT JOIN pump_maintenance m ON r.maintenance_id = m.id
+      LEFT JOIN pump_photo ep ON r.id = ep.asset_id
+      LEFT JOIN room rm ON r.room_id = rm.id
+      LEFT JOIN floor fl ON r.floor_id = fl.id
+      LEFT JOIN site st ON r.site_id = st.id
     WHERE r.id = ?`,
   );
 };
@@ -72,25 +168,25 @@ export const createPump = async (req: Request, res: Response) => {
     'water_flow',
     'power',
   ];
-  const electricalColumns = [
-    'ne_id',
+  const pumpColumns = [
     'site_id',
     'floor_id',
     'room_id',
     'status',
+    `amount`,
+    `condition_asset`,
+    'notes',
     'maintenance_id',
     'installation_date',
-    `\`condition\``,
-    'notes',
     'user_id',
   ];
   await createRowPump(
     req,
     res,
     'pump_device',
-    'PUDEV',
+    'PUMP',
     deviceColumns,
-    electricalColumns,
+    pumpColumns,
   );
 };
 
@@ -104,25 +200,19 @@ export const updatePump = async (req: Request, res: Response) => {
     'water_flow',
     'power',
   ];
-  const electricalColumns = [
-    'ne_id',
+  const pumpColumns = [
     'site_id',
     'floor_id',
     'room_id',
     'status',
+    `amount`,
+    `condition_asset`,
+    'notes',
     'maintenance_id',
     'installation_date',
-    `\`condition\``,
-    'notes',
     'user_id',
   ];
-  await updateRowPump(
-    req,
-    res,
-    'pump_device',
-    deviceColumns,
-    electricalColumns,
-  );
+  await updateRowPump(req, res, 'pump_device', deviceColumns, pumpColumns);
 };
 
 export const deletePump = async (req: Request, res: Response) => {
@@ -134,5 +224,6 @@ export const deletePump = async (req: Request, res: Response) => {
     `DELETE FROM pump_device WHERE id = ?`,
     `DELETE FROM pump_photo WHERE asset_id = ?`,
     `pump`,
+    `pump_photo`,
   );
 };

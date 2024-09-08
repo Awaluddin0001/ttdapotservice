@@ -3,6 +3,7 @@ import { upload } from '@/utils/imageUpload';
 
 import {
   Fluid,
+  Fluids,
   allFluid,
   createFluid,
   deleteFluid,
@@ -63,7 +64,8 @@ fluid.put(
 fluid.delete('/maintenance', deletefluidMaintenance);
 
 // conveyance
-fluid.get('/fluids', allFluid);
+fluid.get('/all', allFluid);
+fluid.get('/fluids', Fluids);
 fluid.get('/fluid', Fluid);
 fluid.post(
   '/fluid',

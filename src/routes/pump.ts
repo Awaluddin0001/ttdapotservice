@@ -19,12 +19,20 @@ import {
 
 import {
   Pump,
+  Pumps,
   allPump,
   createPump,
   deletePump,
   updatePump,
 } from '../controller/pump/category/pumpController';
 import { uploadPdf } from '@/utils/pdfUpload';
+import {
+  createPumpBrand,
+  deletePumpBrand,
+  pumpBrand,
+  pumpBrands,
+  updatePumpBrand,
+} from '@/controller/pump/brand/fluidBrandController';
 
 const pump = Router();
 
@@ -34,6 +42,12 @@ pump.get('/vendor', pumpVendor);
 pump.post('/vendor', createpumpVendor);
 pump.put('/vendor', updatepumpVendor);
 pump.delete('/vendor', deletepumpVendor);
+// brand security
+pump.get('/brands', pumpBrands);
+pump.get('/brand', pumpBrand);
+pump.post('/brand', createPumpBrand);
+pump.put('/brand', updatePumpBrand);
+pump.delete('/brand', deletePumpBrand);
 
 // maintenance security
 pump.get('/maintenances', allpumpMaintenance);
@@ -51,7 +65,8 @@ pump.put(
 pump.delete('/maintenance', deletepumpMaintenance);
 
 // pump
-pump.get('/pumps', allPump);
+pump.get('/all', allPump);
+pump.get('/pumps', Pumps);
 pump.get('/pump', Pump);
 pump.post(
   '/pump',

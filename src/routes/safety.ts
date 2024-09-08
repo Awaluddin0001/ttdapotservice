@@ -3,6 +3,7 @@ import { upload } from '@/utils/imageUpload';
 
 import {
   Safety,
+  Safetys,
   allSafety,
   createSafety,
   deleteSafety,
@@ -14,11 +15,25 @@ import {
   safetyBrand,
   safetyBrands,
   updateSafetyBrand,
-} from '@/controller/safety/brand/extinguishBrandController';
+} from '@/controller/safety/brand/safetyBrandController';
+import {
+  allsafetyVendor,
+  createsafetyVendor,
+  deletesafetyVendor,
+  safetyVendor,
+  updatesafetyVendor,
+} from '@/controller/safety/vendor/safetyVendorController';
 
 const safety = Router();
 
-// brand extinguish
+// vendor furniture
+safety.get('/vendors', allsafetyVendor);
+safety.get('/vendor', safetyVendor);
+safety.post('/vendor', createsafetyVendor);
+safety.put('/vendor', updatesafetyVendor);
+safety.delete('/vendor', deletesafetyVendor);
+
+// brand safety
 safety.get('/brands', safetyBrands);
 safety.get('/brand', safetyBrand);
 safety.post('/brand', createSafetyBrand);
@@ -26,7 +41,7 @@ safety.put('/brand', updateSafetyBrand);
 safety.delete('/brand', deleteSafetyBrand);
 
 // safety
-safety.get('/safetys', allSafety);
+safety.get('/safetys', Safetys);
 safety.get('/safety', Safety);
 safety.post(
   '/safety',

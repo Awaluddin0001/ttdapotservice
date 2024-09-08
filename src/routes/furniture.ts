@@ -7,6 +7,7 @@ import {
   createFurniture,
   deleteFurniture,
   updateFurniture,
+  Furnitures,
 } from '../controller/furniture/category/furnitureController';
 import {
   allfurnitureVendor,
@@ -25,13 +26,14 @@ import {
 
 const furniture = Router();
 
-// vendor rectifier
+// vendor furniture
 furniture.get('/vendors', allfurnitureVendor);
 furniture.get('/vendor', furnitureVendor);
 furniture.post('/vendor', createfurnitureVendor);
 furniture.put('/vendor', updatefurnitureVendor);
 furniture.delete('/vendor', deletefurnitureVendor);
-// brand rectifier
+
+// brand furniture
 furniture.get('/brands', furnitureBrands);
 furniture.get('/brand', furnitureBrand);
 furniture.post('/brand', createFurnitureBrand);
@@ -39,7 +41,8 @@ furniture.put('/brand', updateFurnitureBrand);
 furniture.delete('/brand', deleteFurnitureBrand);
 
 // rackserver
-furniture.get('/furnitures', allFurniture);
+furniture.get('/all', allFurniture);
+furniture.get('/furnitures', Furnitures);
 furniture.get('/furniture', Furniture);
 furniture.post(
   '/furniture',

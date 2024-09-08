@@ -9,24 +9,29 @@ export const fluidBrands = async (req: Request, res: Response) => {
     req,
     res,
     pool,
-    `SELECT cas.*, u.name as user_name FROM fluid_brand as cas`,
+    `SELECT cas.*, u.name as user_name FROM fluid_tank_brand as cas`,
   );
 };
 
 export const fluidBrand = async (req: Request, res: Response) => {
-  await getRowQuery(req, res, pool, `SELECT * FROM fluid_brand WHERE id = ?`);
+  await getRowQuery(
+    req,
+    res,
+    pool,
+    `SELECT * FROM fluid_tank_brand WHERE id = ?`,
+  );
 };
 
 export const createFluidBrand = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await createEntity(req, res, 'fluid_brand', 'EXRBA', columns);
+  await createEntity(req, res, 'fluid_tank_brand', 'EXRBA', columns);
 };
 
 export const updateFluidBrand = async (req: Request, res: Response) => {
   const columns = ['name'];
-  await updateEntity(req, res, 'fluid_brand', columns);
+  await updateEntity(req, res, 'fluid_tank_brand', columns);
 };
 
 export const deleteFluidBrand = async (req: Request, res: Response) => {
-  await deleteRow(req, res, pool, `DELETE FROM fluid_brand WHERE id = ?`);
+  await deleteRow(req, res, pool, `DELETE FROM fluid_tank_brand WHERE id = ?`);
 };

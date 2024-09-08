@@ -18,13 +18,13 @@ const insertRow = async (
   await pool.query<RowDataPacket[]>(query, params);
 };
 
-export const createRowFluid = async (
+export const createRowFurniture = async (
   req: Request,
   res: Response,
   deviceTable: string,
   devicePrefix: string,
   deviceColumns: string[],
-  fluidColumns: string[],
+  furnitureColumns: string[],
 ) => {
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
   const nowWithoutFormat = moment().tz('Asia/Singapore');
@@ -36,26 +36,25 @@ export const createRowFluid = async (
   try {
     connection = await pool.getConnection();
 
-    const newDeviceId = await getNewId(pool, deviceTable, devicePrefix, 3);
-    const newFluidId = await getNewId(pool, 'fluid_tank', 'FT', 6);
+    // const newDeviceId = await getNewId(pool, deviceTable, devicePrefix, 3);
+    const newfurnitureId = await getNewId(pool, 'furniture', 'FU', 6);
 
     const deviceParams = [
-      newDeviceId,
       ...deviceColumns.map((col) => req.body[col] || null),
       now,
     ];
-    const fluidParams = [
-      newFluidId,
-      newDeviceId,
-      ...fluidColumns.map((col) => req.body[col] || null),
+    const furnitureParams = [
+      newfurnitureId,
+      ...furnitureColumns.map((col) => req.body[col] || null),
       now,
     ];
 
-    const deviceQuery = `INSERT INTO ${deviceTable} (id, ${deviceColumns.join(', ')}, created_at) VALUES (?, ${deviceColumns.map(() => '?').join(', ')}, ?)`;
-    const electricalQuery = `INSERT INTO fluid_tank (id, device_id, ${fluidColumns.join(', ')}, created_at) VALUES (?, ?, ${fluidColumns.map(() => '?').join(', ')}, ?)`;
+    // const deviceQuery = `INSERT INTO ${deviceTable} (id, ${deviceColumns.join(', ')}, created_at) VALUES (?, ${deviceColumns.map(() => '?').join(', ')}, ?)`;
+    const electricalQuery = `INSERT INTO furniture (id,  ${furnitureColumns.join(', ')}, created_at) VALUES (?, ${furnitureColumns.map(() => '?').join(', ')}, ?)`;
 
-    await insertRow(pool, deviceQuery, deviceParams);
-    await insertRow(pool, electricalQuery, fluidParams);
+    console.log(electricalQuery);
+
+    await insertRow(pool, electricalQuery, furnitureParams);
 
     // Menyimpan gambar jika ada
     const fileFields = ['foto1', 'foto2', 'foto3'] as const;
@@ -69,13 +68,13 @@ export const createRowFluid = async (
         const file = files[field][0];
         const fileIndex = fileFields.indexOf(field) + 1;
         const newFileName = generateImageFileName(
-          'FLPHO',
-          newDeviceId,
+          'PUPHO',
+          newfurnitureId,
           fileIndex,
         );
         const newPath = path.join(
           __dirname,
-          '../../src/images/fluid',
+          '../../src/images/furniture',
           newFileName,
         );
 
@@ -83,20 +82,20 @@ export const createRowFluid = async (
 
         let photoQuery, photoParams;
         const checkExistingQuery =
-          'SELECT * FROM fluid_tank_photo WHERE asset_id = ?';
+          'SELECT * FROM furniture_photo WHERE asset_id = ?';
         const [existingRows] = await connection.query<RowDataPacket[]>(
           checkExistingQuery,
-          [newFluidId],
+          [newfurnitureId],
         );
 
         if (existingRows.length > 0) {
           // Update query
-          photoQuery = `UPDATE fluid_tank_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
-          photoParams = [newFileName, now, req.body.user_id, newFluidId];
+          photoQuery = `UPDATE furniture_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoParams = [newFileName, now, req.body.user_id, newfurnitureId];
         } else {
           // Insert query
-          photoQuery = `INSERT INTO fluid_tank_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
-          photoParams = [newFluidId, newFileName, now, req.body.user_id];
+          photoQuery = `INSERT INTO furniture_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoParams = [newfurnitureId, newFileName, now, req.body.user_id];
         }
 
         await insertRow(pool, photoQuery, photoParams);
@@ -106,7 +105,7 @@ export const createRowFluid = async (
     const newTrail = new AuditTrailData({
       timestamp: nowWithoutFormat,
       user: req.body.user_id,
-      action: `user ${req.body.user_id} Membuat ${newDeviceId}`,
+      action: `user ${req.body.user_id} Membuat ${newfurnitureId}`,
     });
     await newTrail.save();
 
@@ -128,12 +127,12 @@ const updateARow = async (
 };
 
 // Fungsi utama untuk updateRectifier dan updatePanel
-export const updateRowFluid = async (
+export const updateRowFurniture = async (
   req: Request,
   res: Response,
   deviceTable: string,
   deviceColumns: string[],
-  fluidColumns: string[],
+  furnitureColumns: string[],
 ) => {
   const { id, assetid } = req.query;
   const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
@@ -152,28 +151,21 @@ export const updateRowFluid = async (
       id,
     ];
     const electricalParams = [
-      ...fluidColumns.map((col) => req.body[col] || null),
+      ...furnitureColumns.map((col) => req.body[col] || null),
       now,
       req.body.user_id,
       id,
     ];
 
-    await updateARow(
-      pool,
-      `UPDATE ${deviceTable} SET
-          ${deviceColumns.map((col) => `${col} = ?`).join(', ')},
-          created_at = ?
-        WHERE id = ?`,
-      deviceParams,
-    );
+    console.log(id, assetid);
 
     await updateARow(
       pool,
-      `UPDATE fluid_tank SET
-          ${fluidColumns.map((col) => col + ` = ?`).join(', ')},
+      `UPDATE furniture SET
+          ${furnitureColumns.map((col) => col + ` = ?`).join(', ')},
           created_at = ?,
           user_id = ?
-        WHERE device_id = ?`,
+        WHERE id = ?`,
       electricalParams,
     );
 
@@ -189,13 +181,13 @@ export const updateRowFluid = async (
         const file = files[field][0];
         const fileIndex = fileFields.indexOf(field) + 1;
         const newFileName = generateImageFileName(
-          'FLPHO',
+          'PUPHO',
           id as string,
           fileIndex,
         );
         const newPath = path.join(
           __dirname,
-          '../../src/images/fluid',
+          '../../src/images/furniture',
           newFileName,
         );
 
@@ -203,7 +195,7 @@ export const updateRowFluid = async (
 
         let photoQuery, photoParams;
         const checkExistingQuery =
-          'SELECT * FROM fluid_tank_photo WHERE asset_id = ?';
+          'SELECT * FROM furniture_photo WHERE asset_id = ?';
         const [existingRows] = await connection.query<RowDataPacket[]>(
           checkExistingQuery,
           [assetid],
@@ -211,11 +203,11 @@ export const updateRowFluid = async (
 
         if (existingRows.length > 0) {
           // Update query
-          photoQuery = `UPDATE fluid_tank_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
+          photoQuery = `UPDATE furniture_photo SET foto${fileIndex} = ?, created_at = ?, user_id = ? WHERE asset_id = ?`;
           photoParams = [newFileName, now, req.body.user_id, assetid];
         } else {
           // Insert query
-          photoQuery = `INSERT INTO fluid_tank_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
+          photoQuery = `INSERT INTO furniture_photo (asset_id, foto${fileIndex}, created_at, user_id) VALUES (?, ?, ?, ?)`;
           photoParams = [assetid, newFileName, now, req.body.user_id];
         }
 
