@@ -69,6 +69,37 @@ const deleteDocumentFiles = async (
   }
 };
 
+const deleteLicenseFiles = async (
+  pool: Pool,
+  assetId: string,
+): Promise<void> => {
+  const connection = await pool.getConnection();
+  const [rows] = await connection.query<RowDataPacket[]>(
+    `SELECT name_file FROM license WHERE id = ?`,
+    [assetId],
+  );
+
+  console.log(rows[0].name_file);
+
+  connection.release();
+  if (rows.length > 0) {
+    const documentName = rows[0].name_file;
+    for (let i = 1; i <= 3; i++) {
+      const document = documentName;
+      if (document) {
+        const imagePath = path.join(
+          __dirname,
+          `../../src/documents/licenses`,
+          document,
+        );
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+        }
+      }
+    }
+  }
+};
+
 export const deleteCombinedRow = async (
   req: Request,
   res: Response,
@@ -162,6 +193,29 @@ export const deleteRowDocument = async (
       await deleteDocumentFiles(pool, id as string, folderPath, tableName);
     }
     console.log(id);
+    await connection.query<RowDataPacket[]>(query, [id]);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
+  }
+};
+export const deleteRowLicense = async (
+  req: Request,
+  res: Response,
+  pool: Pool,
+  query: string,
+  folderPath?: string,
+) => {
+  const { id } = req.query;
+  let connection;
+  try {
+    connection = await pool.getConnection();
+
+    // Hapus file gambar terkait
+    await deleteLicenseFiles(pool, id as string);
     await connection.query<RowDataPacket[]>(query, [id]);
     res.status(200).json({ success: true });
   } catch (error) {

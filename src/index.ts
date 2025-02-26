@@ -17,17 +17,25 @@ import path from 'path';
 import { downloadController } from './documents/controller/downloadController';
 import connectDB from './config/mongoDb';
 import pump from './routes/pump';
+import categoryRoutes from './routes/category';
+import license from './routes/licenses';
 
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want
 
+// const corsOptions = {
+//   origin: [
+//     'http://77.37.44.158:10000',
+//     'http://192.168.1.62:5173',
+//     'http://localhost:5173',
+//   ], // Daftar origin yang diizinkan
+//   credentials: true, // Mengizinkan pengiriman cookie dan header khusus
+// };
+
 const corsOptions = {
-  origin: [
-    'http://77.37.44.158:10000',
-    'http://192.168.1.62:5173',
-    'http://localhost:5173',
-  ], // Daftar origin yang diizinkan
-  credentials: true, // Mengizinkan pengiriman cookie dan header khusus
+  origin: 'https://pengayoman.ipagemakassar.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify allowed HTTP methods if needed
+  allowedHeaders: ['Content-Type', 'Authorization'], // specify allowed headers if needed
 };
 
 app.use(cors(corsOptions));
@@ -46,6 +54,8 @@ app.use('/api/v1/dapot/safety', safety);
 app.use('/api/v1/dapot/security', security);
 app.use('/api/v1/dapot/position', position);
 app.use('/api/v1/dapot/pump', pump);
+app.use('/api/v1/dapot/category', categoryRoutes);
+app.use('/api/v1/dapot/documents', license);
 
 // for image
 app.use(

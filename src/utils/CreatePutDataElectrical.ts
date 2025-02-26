@@ -274,6 +274,61 @@ export const createEntityDocument = async (
   }
 };
 
+export const createLicensesDocument = async (
+  req: Request,
+  res: Response,
+  pool: Pool,
+  query: string,
+  folderPath?: string,
+) => {
+  const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  let connection;
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
+  try {
+    connection = await pool.getConnection();
+    const [count] = await connection.query<RowDataPacket[]>(
+      `SELECT COUNT(*) AS total FROM license`,
+    );
+
+    const id = count[0].total + 1;
+
+    const newFileName = `${req.body.name}.pdf`;
+    const params = [id, newFileName, now, req.body.user_id];
+
+    await connection.query<RowDataPacket[]>(query, params);
+
+    // // Menyimpan dokumen jika ada
+    if (folderPath) {
+      const file = req.file; // Get the uploaded file
+      if (file) {
+        const newPath = path.join(
+          __dirname,
+          `../../src/documents/${folderPath}`,
+          newFileName,
+        );
+
+        fs.renameSync(file.path, newPath);
+      }
+    }
+
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} Membuat Document ${id}`,
+    });
+    await newTrail.save();
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error(`Error creating entity in license:`, error);
+    res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
 const updateARow = async (
   pool: Pool,
   query: string,
@@ -475,6 +530,7 @@ export const updateEntity = async (
     if (connection) connection.release();
   }
 };
+
 export const updateEntityDocument = async (
   req: Request,
   res: Response,
@@ -559,6 +615,58 @@ export const updateEntityDocument = async (
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(`Error updating entity in ${tableName}:`, error);
+    res.status(500).send({ success: false, message: 'Internal Server Error' });
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+export const updateLicensesDocument = async (
+  req: Request,
+  res: Response,
+  pool: Pool,
+  query: string,
+  folderPath?: string,
+) => {
+  const now = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+  let connection;
+  const nowWithoutFormat = moment().tz('Asia/Singapore');
+  const quarter = Math.floor((nowWithoutFormat.month() + 3) / 3);
+  const collectionName = `${nowWithoutFormat.year()}Q${quarter}`;
+  const AuditTrailData = createAuditTrail(collectionName);
+  try {
+    connection = await pool.getConnection();
+
+    const id = req.body.id;
+
+    const newFileName = `${req.body.name}.pdf`;
+    const params = [newFileName, now, req.body.user_id, id];
+
+    await connection.query<RowDataPacket[]>(query, params);
+
+    // // Menyimpan dokumen jika ada
+    if (folderPath) {
+      const file = req.file; // Get the uploaded file
+      if (file) {
+        const newPath = path.join(
+          __dirname,
+          `../../src/documents/${folderPath}`,
+          newFileName,
+        );
+
+        fs.renameSync(file.path, newPath);
+      }
+    }
+
+    const newTrail = new AuditTrailData({
+      timestamp: nowWithoutFormat,
+      user: req.body.user_id,
+      action: `user ${req.body.user_id} update Document ${id}`,
+    });
+    await newTrail.save();
+    res.status(201).json({ success: true });
+  } catch (error) {
+    console.error(`Error creating entity in license:`, error);
     res.status(500).send({ success: false, message: 'Internal Server Error' });
   } finally {
     if (connection) connection.release();
