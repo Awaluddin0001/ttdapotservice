@@ -23,20 +23,20 @@ import license from './routes/licenses';
 const app = express();
 const hostname = '0.0.0.0'; // Specify the host you want
 
-// const corsOptions = {
-//   origin: [
-//     'http://77.37.44.158:10000',
-//     'http://192.168.1.62:5173',
-//     'http://localhost:5173',
-//   ], // Daftar origin yang diizinkan
-//   credentials: true, // Mengizinkan pengiriman cookie dan header khusus
-// };
-
 const corsOptions = {
-  origin: 'https://pengayoman.ipagemakassar.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify allowed HTTP methods if needed
-  allowedHeaders: ['Content-Type', 'Authorization'], // specify allowed headers if needed
+  origin: [
+    'http://77.37.44.158:10000',
+    'http://192.168.1.62:5173',
+    'http://localhost:5173',
+  ], // Daftar origin yang diizinkan
+  credentials: true, // Mengizinkan pengiriman cookie dan header khusus
 };
+
+// const corsOptions = {
+//   origin: 'https://pengayoman.ipagemakassar.com',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // specify allowed HTTP methods if needed
+//   allowedHeaders: ['Content-Type', 'Authorization'], // specify allowed headers if needed
+// };
 
 app.use(cors(corsOptions));
 app.use(express.json());
